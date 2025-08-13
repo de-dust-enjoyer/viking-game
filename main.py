@@ -1,6 +1,7 @@
 from constants import *
 from game_state_manager import GameStateManager
 from world import World
+from debug_info import DebugInfo
 
 class Game:
 	def __init__(self):
@@ -16,6 +17,8 @@ class Game:
 
 		self.clock = pygame.time.Clock()
 
+		self.debug_info = DebugInfo(pygame.font.Font(join("assets", "font", "pixel_font.otf")))
+
 	def run(self):
 		while True:
 			dt = self.clock.tick() / 1000
@@ -23,12 +26,21 @@ class Game:
 				if event.type == pygame.QUIT:
 					pygame.quit()
 					sys.exit()
+				elif event.type == pygame.KEYDOWN:
+					if event.key == pygame.K_ESCAPE:
+						pygame.quit()
+						sys.exit()
 
 
 			# run the selected game state
 			self.states[self.game_state_manager.get_state()].run(dt)
 
+			# debugging osd
+			self.debug_info.add("FPS: ", round(self.clock.get_fps(), 1))
+			self.debug_info.add("Sprites Rendered: ", self.world.camera_group.sprites_drawn)
+
 			# update the display surf
+			self.debug_info.render(self.screen)
 			pygame.display.flip()
 
 

@@ -7,7 +7,7 @@ collision_size = {
     "viking_ship_01": (128,128)
 } 
 speed = {
-    "viking_ship_01": 100
+    "viking_ship_01": 60
 }
 animations = {
     "viking_ship_01": {

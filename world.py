@@ -47,7 +47,7 @@ class World:
 
 
 	def build_world(self):
-		tmx_data = pytmx.util_pygame.load_pygame(join("assets", "tiled", "levels", "world_map.tmx")) # type:ignore
+		tmx_data = pytmx.util_pygame.load_pygame(join("assets", "tiled", "levels", "test_world.tmx")) # type:ignore
 		for layer in tmx_data.visible_layers:
 			if isinstance(layer, pytmx.TiledTileLayer):
 				for x, y, gid in layer: #type:ignore

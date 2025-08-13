@@ -1,3 +1,4 @@
+from pygame import RESIZABLE
 from constants import *
 from timer import Timer
 from chunking import get_nearby_tiles
@@ -8,11 +9,14 @@ class CameraGroup(pygame.sprite.Group):
 	def __init__(self, groups:list, chunk_dict:dict, chunk_size:int, type:str="follow"):
 		super().__init__()
 		self.type = type
-		self.render_dist = 8 # chunks
+		self.render_dist_x = RENDER_DIST[0] # chunks
+		self.render_dist_y = RENDER_DIST[1] # chunks
 		self.display_surf = pygame.display.get_surface()
 		self.camera_rect = self.display_surf.get_rect()
 		self.groups = groups
 		self.zoom:float = 1
+
+		self.sprites_drawn = 0
 
 		
 		self.zoom_center = pygame.math.Vector2(self.display_surf.get_size()) / 2
@@ -33,6 +37,7 @@ class CameraGroup(pygame.sprite.Group):
 
 
 	def custom_draw(self):
+		self.sprites_drawn = 0
 		zoom = self.zoom
 		if self.type == "follow":
 			self.box_movement()
@@ -45,17 +50,16 @@ class CameraGroup(pygame.sprite.Group):
 		self.camera_rect.topleft = (self.offset.x , self.offset.y)
 		self.camera_rect.size = (visible_w, visible_h)
 
-		if self.offset.y < 300:
-			self.display_surf.fill("lightblue")
-		else:
-			self.display_surf.fill((27,28,40))
+		self.display_surf.fill((91,110,225))
 		center_pos = self.camera_rect.center
-		nearby_tiles = get_nearby_tiles(center_pos, self.chunk_dict, self.chunk_size, self.render_dist)
+		nearby_tiles = get_nearby_tiles(center_pos, self.chunk_dict, self.chunk_size, self.render_dist_x, self.render_dist_y)
 
 		for sprite in nearby_tiles:
 			sprite_pos = pygame.Vector2(sprite.rect.topleft)
 			adjusted_pos = ((sprite_pos - self.offset) * zoom)
 			self.display_surf.blit(sprite.scale_by(zoom), adjusted_pos)
+			self.sprites_drawn += 1
+
 
 
 		for group in self.groups:
@@ -64,6 +68,7 @@ class CameraGroup(pygame.sprite.Group):
 					sprite_pos = pygame.Vector2(sprite.rect.topleft)
 					adjusted_pos = ((sprite_pos - self.offset) * zoom)
 					self.display_surf.blit(sprite.scale_by(zoom), adjusted_pos)
+					self.sprites_drawn += 1
 
 
 	def box_movement(self):
@@ -81,6 +86,9 @@ class CameraGroup(pygame.sprite.Group):
 				self.velocity = pygame.Vector2(0,0)
 
 		self.offset += self.velocity
+
+
+
 
 	def set_target(self, target, permanent=False, duration=None):
 		if permanent:
