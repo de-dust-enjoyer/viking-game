@@ -10,7 +10,8 @@ class Button(pygame.sprite.Sprite):
 		image_hover = pygame.transform.scale_by(pygame.image.load(join("assets", "ui", "button_hover.png")).convert_alpha(), scale)
 		self.images = {"idle": image_idle, "pressed": image_pressed, "hover": image_hover}
 		self.image = self.images["idle"]
-		self.rect = self.image.get_rect()
+		if type(self.image) == pygame.Surface:
+			self.rect = self.image.get_rect()
 		self.clicked = False
 		self.method = method
 		self.font = pygame.font.Font(join("assets", "font", "pixel_font.otf"), scale * 4)
@@ -33,19 +34,20 @@ class Button(pygame.sprite.Sprite):
 			image.blit(self.text, (image_center[0] - text_offset_x, image_center[1] - text_offset_y))
 
 
-	def update(self, mouse_button_up_event):
+	def update(self, mouse_button_up_event) -> bool: # type:ignore
 		self.image = self.images["idle"]
+
 		mouse_pos = pygame.mouse.get_pos()
 		click = pygame.mouse.get_pressed()[0]
-		if self.rect.collidepoint(mouse_pos):
-			self.image = self.images["hover"]
-			if click:
-				self.clicked = True # clicked on the button
-				self.image = self.images["pressed"]
+			if self.rect.collidepoint(mouse_pos): # type:ignore
+				self.image = self.images["hover"]
+				if click:
+					self.clicked = True # clicked on the button
+					self.image = self.images["pressed"]
 
-				# needs rewriting doesnt work at all
-		else:
-			self.clicked = False
+					# needs rewriting doesnt work at all
+			else:
+				self.clicked = False
 
 		if mouse_button_up_event and self.clicked:
 			if self.method:
@@ -55,3 +57,6 @@ class Button(pygame.sprite.Sprite):
 					self.method()
 
 			return True
+
+		else:
+			return False

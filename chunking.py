@@ -1,4 +1,4 @@
-def get_nearby_tiles(player_pos, chunk_dict, chunk_size, radius_in_chunks=1):
+def get_nearby_tiles(player_pos, chunk_dict, chunk_size, radius_in_chunks=1) -> list:
 		chunk_x = int(player_pos[0] // chunk_size)
 		chunk_y = int(player_pos[1] // chunk_size)
 		nearby_tiles = []

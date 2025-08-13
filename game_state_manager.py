@@ -3,7 +3,7 @@ class GameStateManager:
 		self.state = state
 
 
-	def get_state(self):
+	def get_state(self) -> str:
 		return self.state
 
 	def set_state(self, new_state):
