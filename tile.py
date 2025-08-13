@@ -11,6 +11,10 @@ class Tile(pygame.sprite.Sprite):
 
 
 	def scale_by(self, scale) -> pygame.Surface:
-		if scale not in self.cache:
-			self.cache[scale] = pygame.transform.scale_by(self.image, scale)
-		return self.cache[scale]
+		w = int(round(self.rect.width  * scale)) #type:ignore
+		h = int(round(self.rect.height * scale)) #type:ignore
+
+		key = int(round(scale * 100))  # e.g. 125 for 1.25×
+		if key not in self.cache:
+			self.cache[key] = pygame.transform.scale(self.image, (w, h))
+		return self.cache[key]

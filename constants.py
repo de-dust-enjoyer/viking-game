@@ -9,5 +9,5 @@ STARTING_STATE = "world"
 TILE_SIZE = (16, 16) 
 
 # chunking
-CHUNK_SIZE = 64
-RENDER_DIST = (8,5) # x, y in chunks
+CHUNK_SIZE = 256
+RENDER_DIST = (3,2) # x, y in chunks

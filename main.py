@@ -17,7 +17,7 @@ class Game:
 
 		self.clock = pygame.time.Clock()
 
-		self.debug_info = DebugInfo(pygame.font.Font(join("assets", "font", "pixel_font.otf")))
+		self.debug_info = DebugInfo(pygame.font.Font(join("assets", "font", "pixel_font.otf"), 10))
 
 	def run(self):
 		while True:
@@ -38,6 +38,7 @@ class Game:
 			# debugging osd
 			self.debug_info.add("FPS: ", round(self.clock.get_fps(), 1))
 			self.debug_info.add("Sprites Rendered: ", self.world.camera_group.sprites_drawn)
+			self.debug_info.add("Player Pos: ", self.world.player.rect.center)
 
 			# update the display surf
 			self.debug_info.render(self.screen)
