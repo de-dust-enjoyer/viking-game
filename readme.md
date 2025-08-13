@@ -4,3 +4,5 @@ dependencies:
 1. python -> https://www.python.org/downloads/
 2. pygame-ce ->  cmd: pip install pygame-ce
 3. pytmx -> cmd: pip install pytmx
+
+run main.py: cmd: python main.py
