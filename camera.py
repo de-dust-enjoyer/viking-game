@@ -6,12 +6,12 @@ from chunking import get_nearby_big_tiles
 
 
 class CameraGroup(pygame.sprite.Group):
-	def __init__(self, groups:list, chunk_dict:dict, chunk_size:int, type:str="follow"):
+	def __init__(self, surface:pygame.Surface, groups:list, chunk_dict:dict, chunk_size:int, type:str="follow"):
 		super().__init__()
 		self.type = type
 		self.render_dist_x = RENDER_DIST[0] # chunks
 		self.render_dist_y = RENDER_DIST[1] # chunks
-		self.display_surf = pygame.display.get_surface()
+		self.display_surf = surface
 		self.camera_rect = self.display_surf.get_frect()
 		self.groups = groups
 		self.zoom:float = 1

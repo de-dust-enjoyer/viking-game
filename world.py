@@ -24,7 +24,7 @@ class World:
 		self.objects = pygame.sprite.Group()
 		self.all_tiles = pygame.sprite.Group()
 		self.collision_tiles = pygame.sprite.Group()
-		self.camera_group = CameraGroup([self.objects], self.chunked_tile_imgs, CHUNK_SIZE)
+		self.camera_group = CameraGroup(self.screen, [self.objects], self.chunked_tile_imgs, CHUNK_SIZE)
 		self.ui_group = pygame.sprite.Group()
 
 		self.player = PlayerShip((10000,14000), "player", "viking_ship_01", "ships")

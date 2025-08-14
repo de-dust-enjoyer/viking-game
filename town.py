@@ -6,7 +6,7 @@ class Town(Object):
     def __init__(self, image:pygame.Surface, pos:tuple, id:str, layer_name:str, attributes:dict, landing_zones:dict):
         Object.__init__(self, id, layer_name)
         self.image = image
-        self.rect = self.image.get_frect(center= pos)
+        self.rect = self.image.get_frect(topleft= pos)
         self.attributes = attributes
         self.army = []
         for attribute in self.attributes:
@@ -15,7 +15,7 @@ class Town(Object):
                     soldier = Soldier()
                     self.army.append(soldier)
 
-        print(self.get_combat_strengt())
+        self.landing_zone = landing_zones[self.id]
 
 
     def get_combat_strengt(self) -> tuple:

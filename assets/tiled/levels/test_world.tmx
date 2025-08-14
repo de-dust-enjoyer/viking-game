@@ -1050,14 +1050,14 @@
   </object>
   <object id="6" name="Gunkalden" type="town" gid="5" x="13555.1" y="9584.3" width="108" height="108">
    <properties>
-    <property name="army_strength" type="int" value="24"/>
+    <property name="army_strength" type="int" value="3"/>
     <property name="loot_value" type="int" value="56"/>
    </properties>
   </object>
   <object id="7" name="Nothingen" type="town" gid="5" x="13036.9" y="10699.5" width="108" height="108">
    <properties>
-    <property name="army_strength" type="int" value="0"/>
-    <property name="loot_value" type="int" value="0"/>
+    <property name="army_strength" type="int" value="4"/>
+    <property name="loot_value" type="int" value="23"/>
    </properties>
   </object>
   <object id="8" name="Fingerinass" type="town" gid="5" x="14322" y="7478" width="108" height="108">

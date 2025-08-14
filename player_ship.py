@@ -8,13 +8,11 @@ class PlayerShip(Ship):
     def __init__(self, pos:tuple, id:str, ship_name:str, layer_name:str):
         Ship.__init__(self, pos, ship_name, id, layer_name)
 
-        self.crew = []
+        self.army = []
         starting_crew = 4
         for i in range(starting_crew):
             viking = Viking()
-            self.crew.append(viking)
-
-        print(self.get_combat_strengt())
+            self.army.append(viking)
 
 
     def update(self, dt):
@@ -41,7 +39,7 @@ class PlayerShip(Ship):
     def get_combat_strengt(self) -> tuple:
         damage = 0
         defense = 0
-        for viking in self.crew:
+        for viking in self.army:
             damage += viking.get_stat("damage")
             defense += viking.get_stat("defense")
         return damage, defense
