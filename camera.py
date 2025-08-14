@@ -25,7 +25,7 @@ class CameraGroup(pygame.sprite.Group):
 		self.offset:pygame.math.Vector2 = pygame.math.Vector2(100,250)
 
 		self.velocity = pygame.Vector2(0, 0)
-		self.camera_smoothing = 70
+		self.camera_smoothing = 400
 		self.dead_zone = 0.01
 
 		self.target = None
