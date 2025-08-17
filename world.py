@@ -1,8 +1,11 @@
 from constants import *
 from camera import CameraGroup
+from ui_group import UiGroup
 from player_ship import PlayerShip
 from tile import Tile
 from town import Town
+from button import Button
+from raid_menu import RaidMenu
 
 import pytmx
 
@@ -22,17 +25,21 @@ class World:
 
 		# groups
 		self.objects = pygame.sprite.Group()
-		self.all_tiles = pygame.sprite.Group()
-		self.collision_tiles = pygame.sprite.Group()
 		self.camera_group = CameraGroup(self.screen, [self.objects], self.chunked_tile_imgs, CHUNK_SIZE)
-		self.ui_group = pygame.sprite.Group()
+		self.ui_group = UiGroup()
 
-		self.player = PlayerShip((10000,14000), "player", "viking_ship_01", "ships")
-		self.objects.add(self.player)
+		self.player = PlayerShip((10000,14000), "player", "viking_ship_01", "ships", self.objects)
 		self.camera_group.set_target(self.player, permanent=True)
 
 		self.build_world()
-		
+
+		# ui elements:
+
+		self.raid_menu = RaidMenu(self, self.ui_group, "raid_menu", (SCREEN_SIZE[0]//2, SCREEN_SIZE[1]//2 - 100), 
+			pygame.image.load("assets/sprites/ui/raid_menu/background_surface.png").convert_alpha(), centered=True)
+
+			
+
 
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -42,7 +49,7 @@ class World:
 		# logic
 		for obj in self.objects:
 			obj.update(dt)
-		
+
 		self.ui_group.update(dt)
 
 		# rendering
@@ -97,8 +104,7 @@ class World:
 					for obj in layer:
 						if obj.type == "town":
 							town_img = tmx_data.get_tile_image_by_gid(obj.gid)
-							town = Town(town_img, (obj.x,obj.y), obj.name, layer.name, obj.properties, landing_zones)
-							self.objects.add(town)
+							Town(town_img, (obj.x,obj.y), obj.name, layer.name, obj.properties, landing_zones, self.objects)
 
 
 

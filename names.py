@@ -2,9 +2,22 @@ from random import choice
 
 def generate_name(forenames_dict:dict, surname_dict:dict, type:str) -> tuple:
 	"""generates a random name. names_dict = names.fore- sur- names. type = viking/english"""
-	forename:str = choice(forenames_dict[type])
-	surname:str = choice(surname_dict[type])
-	return forename, surname
+	
+	name_valid = False
+	
+	while not name_valid:
+		forename:str = choice(forenames_dict[type])
+		surname:str = choice(surname_dict[type])
+		if not (forename, surname) in names_in_use:
+			names_in_use.append((forename, surname))
+			name_valid = True
+		else:
+			name_valid = False
+
+	return forename, surname # type:ignore
+
+def remove_name_from_names_in_use(name):
+	names_in_use.pop(names_in_use.index(name))
 
 
 forenames = {
@@ -115,3 +128,6 @@ surnames = {
     	"the Old","the Ancient","the Elder","the Younger","the First","the Last","the Late","the Early","the Timeless","the Wild",
     	"the Tame","the Free","the Bound","the Rock"]
 }
+
+names_in_use = []
+duplicate_names = 0

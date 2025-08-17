@@ -1,19 +1,20 @@
-from warnings import showwarning
 from constants import *
 from object import Object
-from animation_player import AnimationPlayer
+from pygame_animation_player import Animation, AnimationPlayer
+from typing import Optional
 import ship_data
 
 class Ship(Object):
-    def __init__(self, pos:tuple, ship_name:str, id:str, layer_name:str):
-        super().__init__(id,  layer_name)
+    def __init__(self, pos:tuple, ship_name:str, id:str, layer_name:str, group:pygame.sprite.Group):
+        super().__init__(id,  layer_name, group)
 
         self.ship_name = ship_name
 
-        self.animation_player = AnimationPlayer(ship_data.animations[self.ship_name], tilesize=ship_data.size[self.ship_name], starting_animation= "left_sail")
-        self.image = self.animation_player.update()
+        self.image:Optional[pygame.Surface] = None
+        horizontal = Animation(0, pygame.image.load(join("assets", "sprites", "ships", "viking_ship_01", "left_sail.png")).convert_alpha())
+        self.animation_player = AnimationPlayer(self, horizontal=horizontal)
 
-        self.rect = self.image.get_frect(center = pos)
+        self.rect = self.image.get_frect(center = pos) # type:ignore
         self.collision_rect = pygame.Rect(self.rect.center ,ship_data.collision_size[self.ship_name])
 
         # movement
@@ -37,7 +38,7 @@ class Ship(Object):
             self.velocity = self.velocity.normalize()
 
         # update animations according to velocity
-        self.image = self.animation_player.update()
+        self.animation_player.update(dt)
          # flip the sprite
         if self.velocity.x > 0:
             self.flip_h = True

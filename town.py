@@ -3,8 +3,8 @@ from object import Object
 from soldier import Soldier
 
 class Town(Object):
-    def __init__(self, image:pygame.Surface, pos:tuple, id:str, layer_name:str, attributes:dict, landing_zones:dict):
-        Object.__init__(self, id, layer_name)
+    def __init__(self, image:pygame.Surface, pos:tuple, id:str, layer_name:str, attributes:dict, landing_zones:dict, group:pygame.sprite.Group):
+        Object.__init__(self, id, layer_name, group)
         self.image = image
         self.rect = self.image.get_frect(topleft= pos)
         self.attributes = attributes

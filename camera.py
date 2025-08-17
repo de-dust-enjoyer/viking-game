@@ -1,4 +1,3 @@
-from pygame import RESIZABLE
 from constants import *
 from timer import Timer
 from chunking import get_nearby_big_tiles

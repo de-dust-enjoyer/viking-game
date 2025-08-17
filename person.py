@@ -19,13 +19,13 @@ class Person:
         self.base_damage = 5
         self.base_defense = 5
         self.base_health = 30
+        self.base_scouting = 5
         self.damage = self.base_damage
         self.defense = self.base_defense
         self.health = self.base_health
+        self.scouting = self.base_scouting
 
         self.refresh_attr_boni()
-
-        self.print_info()
 
     
 

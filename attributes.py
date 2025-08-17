@@ -14,7 +14,9 @@ attributes = {
             "Professional Soldier": 
                 {"damage": 6, "defense": 8},
             "Thick Skin": 
-                {"defense": 6}
+                {"defense": 6},
+            "Adventurer":
+                {"defense": 1, "damage": 1, "scouting": 4}
         },
 
         "negative": # -----------------------------------
@@ -32,7 +34,8 @@ attributes = {
         {
             "Aggressive": {"damage": 5, "defense": -4},
             "Berserker": {"damage": 9, "defense": -8},
-            "Defensive": {"damage": -2, "defense": 5}
+            "Defensive": {"damage": -2, "defense": 5},
+            "Barely Fiffteen": {"damage": -3, "defense": -5, "scouting": 10}
         },
     },
     "english": 
@@ -85,6 +88,8 @@ attribute_dialog = {
         "Aggressive": "Why are you looking at me?. Do you have a Problem?!",
         "Berserker": "MURDEEER, KILL AAAARRRRRRRRGGGGG",
         "Defensive": "I like my shield more than my Axe",
+        "Adventurer": "I love to be Outside and see the World.",
+        "Barely Fiffteen": "I just turned Fiffteen. This is my first Voyage."
         },
     "english":
         {
