@@ -2,7 +2,7 @@ from constants import *
 from object import Object
 from pygame_animation_player import Animation, AnimationPlayer
 from typing import Optional
-import ship_data
+import data.ship_data as ship_data
 
 class Ship(Object):
     def __init__(self, pos:tuple, ship_name:str, id:str, layer_name:str, group:pygame.sprite.Group):

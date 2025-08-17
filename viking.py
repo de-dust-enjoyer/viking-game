@@ -1,6 +1,5 @@
 from constants import *
-import names
-import attributes
+
 from person import Person
 
 class Viking(Person):

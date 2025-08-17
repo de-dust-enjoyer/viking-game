@@ -1,7 +1,7 @@
 from constants import *
-from game_state_manager import GameStateManager
+from utils.game_state_manager import GameStateManager
 from world import World
-from debug_info import DebugInfo
+from utils.debug_info import DebugInfo
 
 class Game:
 	def __init__(self):

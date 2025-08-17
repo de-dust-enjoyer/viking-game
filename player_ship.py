@@ -1,5 +1,5 @@
 from constants import *
-from ship import Ship
+from base_classes.ship import Ship
 from viking import Viking
 from town import Town
 

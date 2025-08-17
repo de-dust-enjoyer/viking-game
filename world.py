@@ -2,7 +2,7 @@ from constants import *
 from camera import CameraGroup
 from ui_group import UiGroup
 from player_ship import PlayerShip
-from tile import Tile
+from base_classes.tile import Tile
 from town import Town
 from button import Button
 from raid_menu import RaidMenu

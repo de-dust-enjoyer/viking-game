@@ -1,5 +1,5 @@
 from constants import *
-from ui_element import UiElement
+from base_classes.ui_element import UiElement
 from town import Town
 from button import Button
 

@@ -1,6 +1,6 @@
 from constants import *
-import names
-import attributes
+import data.names as names
+import data.attributes as attributes
 
 class Person:
     def __init__(self, type:str, name=None, attr=None):

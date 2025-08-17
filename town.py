@@ -1,5 +1,5 @@
 from constants import *
-from object import Object
+from base_classes.object import Object
 from soldier import Soldier
 
 class Town(Object):
