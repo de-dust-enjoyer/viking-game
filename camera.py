@@ -139,6 +139,9 @@ class CameraGroup(pygame.sprite.Group):
 				self.temp_target_timer.set_duration(duration)
 				self.temp_target_timer.start()
 
+	def remove_target(self):
+		self.temp_target = None
+
 	def set_position(self, position:tuple):
 		self.offset.update(position[0] -self.camera_rect.width / 2, position[1] -self.camera_rect.height / 2)
 
