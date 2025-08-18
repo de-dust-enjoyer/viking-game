@@ -7,6 +7,6 @@ class ButtonPrompt(UiElement):
         space_name_img = 10
         text_color = (200,200,200)
         text_surf = font.render(text, False, text_color)
-        img_surf = 
+        
 
         UiElement.__init__(self, parent, group, "button_prompt "+text+" "+key, pos, surf, centered=True)

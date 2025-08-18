@@ -12,7 +12,11 @@ class Ship(Object):
 
         self.image:Optional[pygame.Surface] = None
         horizontal = Animation(0, pygame.image.load(join("assets", "sprites", "ships", "viking_ship_01", "left_sail.png")).convert_alpha())
-        self.animation_player = AnimationPlayer(self, horizontal=horizontal)
+        up = Animation(0, pygame.image.load(join("assets", "sprites", "ships", "viking_ship_01", "up_sail.png")).convert_alpha())
+        down = Animation(0, pygame.image.load(join("assets", "sprites", "ships", "viking_ship_01", "down_sail.png")).convert_alpha())
+        self.animation_player = AnimationPlayer(self, horizontal=horizontal, up=up, down=down)
+        self.animation:str = "horizontal"
+
 
         self.rect = self.image.get_frect(center = pos) # type:ignore
         self.collision_rect = pygame.Rect(self.rect.center ,ship_data.collision_size[self.ship_name])
@@ -38,8 +42,19 @@ class Ship(Object):
             self.velocity = self.velocity.normalize()
 
         # update animations according to velocity
+        if self.velocity.y > abs(self.velocity.x):
+            # ship going down
+            self.animation_player.play("down")
+        elif self.velocity.y < -abs(self.velocity.x):
+            # ship going up
+            self.animation_player.play("up")
+        elif self.velocity.length() != 0:
+            # ship going horizontal
+            self.animation_player.play("horizontal")
+
+        
         self.animation_player.update(dt)
-         # flip the sprite
+        
         if self.velocity.x > 0:
             self.flip_h = True
         elif self.velocity.x < 0:
