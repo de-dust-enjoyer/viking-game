@@ -4,7 +4,6 @@ from ui_group import UiGroup
 from player_ship import PlayerShip
 from base_classes.tile import Tile
 from town import Town
-from button import Button
 from raid_menu import RaidMenu
 
 import pytmx
@@ -19,17 +18,22 @@ class World:
 		self.chunked_tiles = {} # {(chunk_x, chunk_y): [Tile, Tile, Tile ...]} # for collisions
 		self.chunked_tile_imgs = {} # {(chunk_x, chunk_y): BIG_TILE} # for rendering
 
+		# can only chunk static objects
+		self.chunked_static_objects = {} # {(chunk_x, chunk_y): [Object, Object, ...]}
+
 		self.world_size = (0,0)
 		self.tilesize = (0,0)
 
 
 		# groups
-		self.objects = pygame.sprite.Group()
-		self.camera_group = CameraGroup(self.screen, [self.objects], self.chunked_tile_imgs, CHUNK_SIZE)
+		self.dynamic_objects = pygame.sprite.Group()
+		self.static_objects = pygame.sprite.Group()
+		self.camera_group = CameraGroup(self.screen, [self.dynamic_objects], self.chunked_tile_imgs, self.chunked_static_objects, CHUNK_SIZE)
 		self.ui_group = UiGroup()
 
-		self.player = PlayerShip((10000,14000), "player", "viking_ship_01", "ships", self.objects)
+		self.player = PlayerShip(self, "viking_ship_01", self.dynamic_objects)
 		self.camera_group.set_target(self.player, permanent=True)
+
 
 		self.build_world()
 
@@ -47,7 +51,7 @@ class World:
 		# input
 
 		# logic
-		for obj in self.objects:
+		for obj in self.dynamic_objects:
 			obj.update(dt)
 
 		self.ui_group.update(dt)
@@ -63,6 +67,8 @@ class World:
 
 
 	def build_world(self):
+		self.screen.blit(pygame.image.load(join("assets", "sprites", "ui", "loading_screen", "loading_screen.png")).convert_alpha(), (0,0))
+		pygame.display.flip()
 		tmx_data = pytmx.util_pygame.load_pygame(join("assets", "tiled", "levels", "test_world.tmx")) # type:ignore
 		self.tilesize = (tmx_data.tilewidth, tmx_data.tileheight)
 		self.world_size = (tmx_data.width * self.tilesize[0], tmx_data.height * self.tilesize[1])
@@ -79,11 +85,14 @@ class World:
 
 					tile = Tile(pos, tile_img, gid, layer.name) #type:ignore
 				# chunking
-
+					# calculate which chunk the tile is in
 					chunk_x = pos[0] // CHUNK_SIZE
 					chunk_y = pos[1] // CHUNK_SIZE
+
 					chunk_key = (chunk_x, chunk_y)
+
 					self.chunked_tiles.setdefault(chunk_key, []).append(tile)
+
 			elif isinstance(layer, pytmx.TiledObjectGroup):
 				if layer.name == "player_spawn":
 					for obj in layer:
@@ -104,9 +113,15 @@ class World:
 					for obj in layer:
 						if obj.type == "town":
 							town_img = tmx_data.get_tile_image_by_gid(obj.gid)
-							Town(town_img, (obj.x,obj.y), obj.name, layer.name, obj.properties, landing_zones, self.objects)
+							town = Town(town_img, (obj.x,obj.y), obj.name, layer.name, obj.properties, landing_zones, self.static_objects)
 
+							# chunk it
+							chunk_x = obj.x // CHUNK_SIZE
+							chunk_y = obj.y // CHUNK_SIZE
 
+							chunk_key = (chunk_x, chunk_y)
+
+							self.chunked_static_objects.setdefault(chunk_key, []).append(town)
 
 
 

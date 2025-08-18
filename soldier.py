@@ -1,6 +1,6 @@
 from constants import *
 
-from person import Person
+from base_classes.person import Person
 
 class Soldier(Person):
     def __init__(self, name=None, attr=None):

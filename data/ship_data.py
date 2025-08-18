@@ -4,7 +4,7 @@ size = {
     "viking_ship_01": (138,138)
 }
 collision_size = {
-    "viking_ship_01": (128,128)
+    "viking_ship_01": (105,40)
 } 
 speed = {
     "viking_ship_01": 60

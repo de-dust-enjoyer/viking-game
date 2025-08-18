@@ -1,5 +1,5 @@
 from constants import *
-
+from typing import Optional
 
 class Object(pygame.sprite.Sprite):
 	def __init__(self, name:str, layer_name:str, group:pygame.sprite.Group):
@@ -8,7 +8,7 @@ class Object(pygame.sprite.Sprite):
 		self.group = group
 		self.layer_name = layer_name
 		self.dead = False
-		self.image:pygame.Surface = pygame.Surface((16,16))
+		self.image:Optional[pygame.Surface] = None
 		self.flip_h = False
 
 	def scale_by(self, scale:float) -> pygame.Surface:

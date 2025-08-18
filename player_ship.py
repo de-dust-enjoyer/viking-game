@@ -2,18 +2,21 @@ from constants import *
 from base_classes.ship import Ship
 from viking import Viking
 from town import Town
+from utils.chunking import get_nearby_static_objects
 
 
 class PlayerShip(Ship):
-    def __init__(self, pos:tuple, id:str, ship_name:str, layer_name:str, group:pygame.sprite.Group):
-        Ship.__init__(self, pos, ship_name, id, layer_name, group)
-
+    def __init__(self, parent, ship_name:str, group:pygame.sprite.Group):
+        Ship.__init__(self, (0, 0), ship_name, "player", "ships", group)
+        self.parent = parent
         self.raid_target = None
         self.army = []
         starting_crew = 4
         for i in range(starting_crew):
             viking = Viking()
             self.army.append(viking)
+
+        self.known_towns:list[str] = []
 
 
     def update(self, dt):
@@ -46,10 +49,13 @@ class PlayerShip(Ship):
             defense += viking.get_stat("defense")
         return damage, defense
 
-    def check_if_can_raid(self):
-        for obj in self.group:
-            if isinstance(obj, Town):
-                if self.collision_rect.colliderect(obj.landing_zone):
-                    self.raid_target = obj
-                else:
-                    self.raid_target = None
+    def check_if_can_raid(self) -> None:
+        
+        range_x, range_y = 5, 4 # how big of an area is to be checked in chunks
+        nearby_static_objects = get_nearby_static_objects(self.collision_rect.center, self.parent.chunked_static_objects, CHUNK_SIZE, range_x, range_y) # type:ignore
+        for object in nearby_static_objects:
+            if isinstance(object, Town):
+                if self.collision_rect.colliderect(object.landing_zone):
+                    self.raid_target = object
+                    return
+        self.raid_target = None

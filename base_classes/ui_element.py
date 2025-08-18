@@ -1,5 +1,4 @@
 from constants import *
-from typing import Optional
 
 class UiElement(pygame.sprite.Sprite):
     def __init__(self, parent, group:pygame.sprite.Group, id:str, pos:tuple, background_surf:pygame.Surface, centered=False, **kwargs) -> None:
@@ -20,6 +19,9 @@ class UiElement(pygame.sprite.Sprite):
         self.visible = True
 
     def update(self, dt):
+        self.update_components()
+
+    def update_components(self):
         for component in self.components:
             self.components[component].visible = self.visible
             if self.components[component].visible:
@@ -27,8 +29,6 @@ class UiElement(pygame.sprite.Sprite):
                 # blit componets to background surf
                 self.image.blit(self.components[component].image, self.components[component].rect) # type:ignore
             
-
-
 
     def hide(self):
         self.visible = False

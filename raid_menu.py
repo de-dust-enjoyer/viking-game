@@ -2,6 +2,7 @@ from constants import *
 from base_classes.ui_element import UiElement
 from town import Town
 from button import Button
+from typing import Optional
 
 class RaidMenu(UiElement):
     def __init__(self, parent, group:pygame.sprite.Group, id: str, pos: tuple, background_surf: pygame.Surface, centered=False) -> None:
@@ -12,10 +13,18 @@ class RaidMenu(UiElement):
         }
         super().__init__(parent, group, id, pos, background_surf, centered, **elements)
 
-        self.visible = True
+        self.visible = False
+        self.parent = parent
+        self.town:Optional[Town] = self.parent.player.raid_target
 
 
-        self.target = None
+    def update(self, dt):
+        self.visible = False
+        if self.parent.player.raid_target:
+            self.visible = True
+    
+
+        self.update_components()
 
 
 

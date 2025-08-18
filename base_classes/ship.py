@@ -1,5 +1,5 @@
 from constants import *
-from object import Object
+from base_classes.object import Object
 from pygame_animation_player import Animation, AnimationPlayer
 from typing import Optional
 import data.ship_data as ship_data
