@@ -5,6 +5,7 @@ from player_ship import PlayerShip
 from base_classes.tile import Tile
 from town import Town
 from raid_menu import RaidMenu
+from inventory import Inventory
 
 import pytmx
 
@@ -41,6 +42,8 @@ class World:
 
 		self.raid_menu = RaidMenu(self, self.ui_group, "raid_menu", (SCREEN_SIZE[0]//2, SCREEN_SIZE[1]//2 - 100), 
 			pygame.image.load("assets/sprites/ui/raid_menu/background_surface.png").convert_alpha(), centered=True)
+
+		self.inventory_menu = Inventory(self, self.ui_group)
 
 			
 

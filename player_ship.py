@@ -3,7 +3,8 @@ from base_classes.ship import Ship
 from viking import Viking
 from town import Town
 from utils.chunking import get_nearby_static_objects
-import random
+from data.item_data import item_data
+from item import Item
 
 
 class PlayerShip(Ship):
@@ -12,6 +13,9 @@ class PlayerShip(Ship):
         self.parent = parent
         self.raid_target = None
         self.army = []
+        self.inventory = []
+        for i in item_data:
+            self.inventory.append(Item(i))    
         starting_crew = 4
         for i in range(starting_crew):
             viking = Viking()

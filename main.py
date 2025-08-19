@@ -17,7 +17,7 @@ class Game:
 
 		self.clock = pygame.time.Clock()
 
-		self.debug_info = DebugInfo(pygame.font.Font(join("assets", "font", "pixel_font.otf"), 10))
+		self.debug_info = DebugInfo(pygame.font.Font(join("assets", "font", "Norse-Bold.otf"), 14))
 
 	def run(self):
 		while True:
