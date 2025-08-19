@@ -24,7 +24,7 @@ class CameraGroup(pygame.sprite.Group):
 		self.offset:pygame.math.Vector2 = pygame.math.Vector2(100,250)
 
 		self.velocity = pygame.Vector2(0, 0)
-		self.camera_smoothing = 1
+		self.camera_smoothing = 300
 		self.dead_zone = 1e-8 # very small number
 
 		self.target = None
@@ -128,6 +128,9 @@ class CameraGroup(pygame.sprite.Group):
 		self.offset += self.velocity
 
 
+	def remove_target(self):
+		if self.temp_target:
+			self.temp_target = None
 
 
 	def set_target(self, target, permanent=False, duration=None):
@@ -138,9 +141,6 @@ class CameraGroup(pygame.sprite.Group):
 			if duration:
 				self.temp_target_timer.set_duration(duration)
 				self.temp_target_timer.start()
-
-	def remove_target(self):
-		self.temp_target = None
 
 	def set_position(self, position:tuple):
 		self.offset.update(position[0] -self.camera_rect.width / 2, position[1] -self.camera_rect.height / 2)

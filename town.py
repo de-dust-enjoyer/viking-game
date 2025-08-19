@@ -15,6 +15,8 @@ class Town(Object):
                 for i in range(self.attributes[attribute]):
                     soldier = Soldier()
                     self.army.append(soldier)
+            elif attribute == "loot_value":
+                self.loot_value = self.attributes[attribute]
 
         self.landing_zone = landing_zones[self.id]
 
