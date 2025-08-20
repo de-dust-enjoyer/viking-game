@@ -17,9 +17,8 @@ class World:
         self.game = game
 
         # chunking
-        self.chunked_tiles = (
-            {}
-        )  # {(chunk_x, chunk_y): [Tile, Tile, Tile ...]} # for collisions
+        self.chunked_tiles = {}  # {(chunk_x, chunk_y): [Tile, Tile, Tile ...]} # for collisions
+        self.chunked_animated_tiles = {}  # {(chunk_x, chunk_y): [Tile, Tile, Tile ...]} # for rendering animated tiles
         self.chunked_tile_imgs = {}  # {(chunk_x, chunk_y): BIG_TILE} # for rendering
 
         # can only chunk static objects
@@ -30,6 +29,7 @@ class World:
 
         # groups
         self.dynamic_objects = pygame.sprite.Group()
+        self.animated_tiles = pygame.sprite.Group()
         self.static_objects = pygame.sprite.Group()
         self.camera_group = CameraGroup(
             self.screen,
@@ -52,9 +52,7 @@ class World:
             self.ui_group,
             "raid_menu",
             (SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2 - 100),
-            pygame.image.load(
-                "assets/sprites/ui/raid_menu/background_surface.png"
-            ).convert_alpha(),
+            pygame.image.load("assets/sprites/ui/raid_menu/background_surface.png").convert_alpha(),
             centered=True,
         )
 
@@ -78,23 +76,17 @@ class World:
 
     def build_world(self):
         self.screen.blit(
-            pygame.image.load(
-                join("assets", "sprites", "ui", "loading_screen", "loading_screen.png")
-            ).convert_alpha(),
+            pygame.image.load(join("assets", "sprites", "ui", "loading_screen", "loading_screen.png")).convert_alpha(),
             (0, 0),
         )
         pygame.display.flip()
-        tmx_data = pytmx.util_pygame.load_pygame(
-            join("assets", "tiled", "levels", "test_world.tmx")
-        )  # type:ignore
+        tmx_data = pytmx.util_pygame.load_pygame(join("assets", "tiled", "levels", "test_world_02.tmx"))  # type:ignore
         self.tilesize = (tmx_data.tilewidth, tmx_data.tileheight)
         self.world_size = (
             tmx_data.width * self.tilesize[0],
             tmx_data.height * self.tilesize[1],
         )
-        landing_zones = (
-            {}
-        )  # init landing zone dict to store the landing zones for the towns
+        landing_zones = {}  # init landing zone dict to store the landing zones for the towns
         for layer in tmx_data.visible_layers:
             # tile creation
             if isinstance(layer, pytmx.TiledTileLayer):
@@ -122,17 +114,13 @@ class World:
                             if obj.name == "player_spawn":
                                 # set the players position
                                 self.player.position.update((obj.x, obj.y))
-                                self.camera_group.set_position(
-                                    self.player.collision_rect.center
-                                )
+                                self.camera_group.set_position(self.player.collision_rect.center)
                                 self.camera_group.set_zoom(1)
 
                 elif layer.name == "landing_zones":
                     for obj in layer:
                         if obj.type == "landing_zone":
-                            landing_zones[obj.name] = pygame.Rect(
-                                obj.x, obj.y, obj.width, obj.height
-                            )
+                            landing_zones[obj.name] = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
 
                 elif layer.name == "towns":
                     for obj in layer:
@@ -154,9 +142,7 @@ class World:
 
                             chunk_key = (chunk_x, chunk_y)
 
-                            self.chunked_static_objects.setdefault(
-                                chunk_key, []
-                            ).append(town)
+                            self.chunked_static_objects.setdefault(chunk_key, []).append(town)
 
         # go throug each tile in chunked tiles and render it onto a surface so that each chunk is only one surface
         for chunk in self.chunked_tiles:
@@ -167,8 +153,6 @@ class World:
                 y = tile.rect.top - chunk[1] * CHUNK_SIZE
                 surf.blit(tile.image, (x, y))
 
-            tile = Tile(
-                (chunk[0] * CHUNK_SIZE, chunk[1] * CHUNK_SIZE), surf, 0, "BIG_TILES"
-            )
+            tile = Tile((chunk[0] * CHUNK_SIZE, chunk[1] * CHUNK_SIZE), surf, 0, "BIG_TILES")
 
             self.chunked_tile_imgs[chunk] = tile

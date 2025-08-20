@@ -31,9 +31,7 @@ class PlayerShip(Ship):
             viking = Viking()
             self.army.append(viking)
 
-        self.known_towns: dict = (
-            {}
-        )  # {town_name: {name:öalkdfakl, army_strenght: salfjaöls, ....}
+        self.known_towns: dict = {}  # {town_name: {name:öalkdfakl, army_strenght: salfjaöls, ....}
 
     def update(self, dt):
         self._apply_player_input()  # updates the velocity vector according to input
@@ -86,7 +84,5 @@ class PlayerShip(Ship):
 
         self.known_towns[self.raid_target.id]["name"] = self.raid_target.id
         self.known_towns[self.raid_target.id]["army_size"] = len(self.raid_target.army)
-        self.known_towns[self.raid_target.id][
-            "loot_value"
-        ] = self.raid_target.loot_value
+        self.known_towns[self.raid_target.id]["loot_value"] = self.raid_target.loot_value
         print(self.known_towns)

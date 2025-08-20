@@ -28,13 +28,7 @@ class ItemGridContainer:
         # random value. gets changed anyways if not raises error!
         self.image = pygame.Surface((1, 1))
         for attr in kwargs:
-            if (
-                attr == "image"
-                or attr == "background"
-                or attr == "background_img"
-                or attr == "img"
-                or attr == "background_image"
-            ):
+            if attr == "image" or attr == "background" or attr == "background_img" or attr == "img" or attr == "background_image":
                 if isinstance(kwargs[attr], pygame.Surface):
                     self.image = kwargs[attr]
             elif attr == "size":
@@ -47,9 +41,7 @@ class ItemGridContainer:
             (self.rect.width - self.padding * 2, self.rect.height - self.padding * 2),
             pygame.SRCALPHA,
         )
-        self.grid_rect = self.grid_surf.get_rect(
-            center=(self.rect.width // 2, self.rect.height // 2)
-        )
+        self.grid_rect = self.grid_surf.get_rect(center=(self.rect.width // 2, self.rect.height // 2))
         self.items_per_row = 0
         self._refresh_item_counts()
         self._draw_items()
@@ -58,19 +50,13 @@ class ItemGridContainer:
         self._draw_items()
 
     def _calculate_grid_position(self, index: int) -> tuple:
-        self.items_per_row = (self.grid_rect.width + self.spacing) // (
-            self.item_img_size + self.spacing
-        )
+        self.items_per_row = (self.grid_rect.width + self.spacing) // (self.item_img_size + self.spacing)
         if self.items_per_row == 0:
-            raise ZeroDivisionError(
-                f"container width: {self.grid_rect.width} is smaller than item img size: {self.item_img_size + self.spacing}"
-            )
+            raise ZeroDivisionError(f"container width: {self.grid_rect.width} is smaller than item img size: {self.item_img_size + self.spacing}")
         row = index // self.items_per_row
         col = index % self.items_per_row
 
-        return col * (self.item_img_size + self.spacing), row * (
-            self.item_img_size + self.spacing
-        )
+        return col * (self.item_img_size + self.spacing), row * (self.item_img_size + self.spacing)
 
     def _is_item_visible(self, index: int) -> bool:
         y = self._calculate_grid_position(index)[1]
