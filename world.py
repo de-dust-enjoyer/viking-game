@@ -89,14 +89,30 @@ class World:
         landing_zones = {}  # init landing zone dict to store the landing zones for the towns
         for layer in tmx_data.visible_layers:
             # tile creation
+
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, gid in layer:  # type:ignore
+                    frames = []
+                    frame_fps = 0
+                    # get the tile propertys (for animation)
+                    tile_props = tmx_data.get_tile_properties_by_gid(gid)
+                    # check if the tile has properties
+                    if tile_props:
+                        # check if the tile has animation frames
+                        if "frames" in tile_props:
+                            # check if there are any frames in frames
+                            if tile_props["frames"]:
+                                # create empty list to append the animaiton frames
+                                for frame in tile_props["frames"]:
+                                    frame_img = tmx_data.get_tile_image_by_gid(frame.gid)
+                                    frame_fps = 1000 / frame.duration
+                                    frames.append(frame_img)
+
                     tile_img = tmx_data.get_tile_image_by_gid(gid)
                     if not tile_img:
                         continue
 
                     pos = (x * TILE_SIZE[0], y * TILE_SIZE[1])
-
                     tile = Tile(pos, tile_img, gid, layer.name)  # type:ignore
                     # chunking
                     # calculate which chunk the tile is in

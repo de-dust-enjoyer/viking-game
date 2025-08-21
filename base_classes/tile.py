@@ -10,10 +10,6 @@ class Tile(pygame.sprite.Sprite):
         self.id = gid
         self.layer: str = layer_name
 
-        # animation = Animation()
-
-        # self.animation_player = AnimationPlayer(self, animation=animation)
-
         self.cache = {}
 
     def scale_by(self, scale) -> pygame.Surface:
