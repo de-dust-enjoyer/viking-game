@@ -31,8 +31,8 @@ class CameraGroup(pygame.sprite.Group):
         self.visible_offset = pygame.math.Vector2 = pygame.math.Vector2(100, 250)
 
         self.velocity = pygame.Vector2(0, 0)
-        self.camera_speed = 4
-        self.dead_zone = 1e-8  # very small number
+        self.camera_speed = 10
+        self.dead_zone = 10  # very small number
 
         self.target = None
         self.temp_target = None
@@ -50,8 +50,6 @@ class CameraGroup(pygame.sprite.Group):
         self.zoom_center.update(w / 2, h / 2)
 
         prev_zoom = self.zoom
-        if self.zoom != self.zoom_target:
-            self.zoom = pygame.math.lerp(self.zoom, self.zoom_target, 0.01)
 
         if abs(self.zoom - prev_zoom) > 1e-8:
             anchor = self.zoom_center
@@ -98,7 +96,6 @@ class CameraGroup(pygame.sprite.Group):
         nearby_animated_tiles = get_nearby_tiles(center_pos, self.chunked_animated_tiles, self.chunk_size, self.render_dist_x, self.render_dist_y)
 
         for sprite in nearby_animated_tiles:
-            sprite.update(dt)
             sprite_pos = sprite.rect.topleft
             adjusted_pos_x = (sprite_pos[0] - self.visible_offset.x) * zoom
             adjusted_pos_y = (sprite_pos[1] - self.visible_offset.y) * zoom
@@ -146,7 +143,7 @@ class CameraGroup(pygame.sprite.Group):
                 self.velocity = pygame.Vector2(0, 0)
 
         # calculat
-        offset_increment = self.velocity * self.camera_speed * dt
+        offset_increment = self.velocity * self.camera_speed * dt  # frame independence :)
 
         self.offset += offset_increment
         self.visible_offset.x = round(self.offset.x)

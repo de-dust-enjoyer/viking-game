@@ -34,19 +34,11 @@ class AnimatedTile(Tile):
         for frame in range(len(frames)):
             self.cache.append({})
 
-    def update(self, dt):
-        if not self.is_animated:
-            return
-
-        self.animation_timer += dt
-
-        if self.animation_timer >= self.frame_duration:
-            self.frame_index += 1
-            self.animation_timer = 0
-
-            if self.frame_index >= len(self.frames):
-                self.frame_index = 0
-            self.image = self.frames[self.frame_index]
+    def increment_frame(self):
+        self.frame_index += 1
+        if self.frame_index >= len(self.frames):
+            self.frame_index = 0
+        self.image = self.frames[self.frame_index]
 
     def scale_by(self, scale) -> pygame.Surface:
         if scale not in self.cache[self.frame_index]:
@@ -55,5 +47,39 @@ class AnimatedTile(Tile):
 
 
 class TileAnimationManager:
-    def __init__(self, chunked_tiles):
-        self.chunked_tiles = chunked_tiles
+    def __init__(self):
+        self.groups = {}  # {frame_duration: [tile, tile, tile, ...]}
+        self.timers = {}  # {frame_duration: Timer object}
+        self.ready = False
+
+    def init(self, chunked_tiles) -> None:
+        self.groups = {}
+        for chunk in chunked_tiles.values():
+            for tile in chunk:
+                if tile.frame_duration not in self.groups:
+                    # group with frame duration does not jet exist -> create group
+                    self.groups[tile.frame_duration] = []
+                    # also need a timer for every group (repeat true because of course)
+                    self.timers[tile.frame_duration] = Timer(tile.frame_duration, repeat=True)
+                    # need to start the timer
+                    self.timers[tile.frame_duration].start()
+                    # add tile to group
+                    self.groups[tile.frame_duration].append(tile)
+                else:
+                    # group with frame duration does already exist -> add tile to group
+                    self.groups[tile.frame_duration].append(tile)
+        self.ready = True
+        self.start_all_timers()
+        print(self.groups)
+
+    def update(self) -> None:
+        # only update if self.init has been called at least once
+        if self.ready:
+            for duration in self.timers:
+                if self.timers[duration].update():
+                    for tile in self.groups[duration]:
+                        tile.increment_frame()
+
+    def start_all_timers(self) -> None:
+        for timer in self.timers.values():
+            timer.start()

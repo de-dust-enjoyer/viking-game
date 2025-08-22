@@ -2,7 +2,7 @@ from constants import *
 from camera import CameraGroup
 from ui_group import UiGroup
 from player_ship import PlayerShip
-from base_classes.tile import Tile, AnimatedTile
+from base_classes.tile import Tile, AnimatedTile, TileAnimationManager
 from town import Town
 from raid_menu import RaidMenu
 from inventory import Inventory
@@ -41,6 +41,8 @@ class World:
         )
         self.ui_group = UiGroup()
 
+        self.tile_animation_manager = TileAnimationManager()
+
         self.player = PlayerShip(self, "viking_ship_01", self.dynamic_objects)
         self.camera_group.set_target(self.player, permanent=True)
 
@@ -66,6 +68,8 @@ class World:
         # logic
         for obj in self.dynamic_objects:
             obj.update(dt)
+
+        self.tile_animation_manager.update()
 
         self.ui_group.update(dt)
 
@@ -178,3 +182,6 @@ class World:
             tile = Tile((chunk[0] * CHUNK_SIZE, chunk[1] * CHUNK_SIZE), surf, 0, "BIG_TILES")
 
             self.chunked_tile_imgs[chunk] = tile
+
+        # init the animation manager with the animation tiles
+        self.tile_animation_manager.init(self.chunked_animated_tiles)
