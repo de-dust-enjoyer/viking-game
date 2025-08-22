@@ -2,7 +2,7 @@ from constants import *
 from camera import CameraGroup
 from ui_group import UiGroup
 from player_ship import PlayerShip
-from base_classes.tile import Tile
+from base_classes.tile import Tile, AnimatedTile
 from town import Town
 from raid_menu import RaidMenu
 from inventory import Inventory
@@ -93,35 +93,40 @@ class World:
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, gid in layer:  # type:ignore
                     frames = []
-                    frame_fps = 0
+                    frame_duration = 0
+                    tile_pos = (x * TILE_SIZE[0], y * TILE_SIZE[1])
+                    # chunking
+                    # calculate which chunk the tile is in
+                    chunk_x = tile_pos[0] // CHUNK_SIZE
+                    chunk_y = tile_pos[1] // CHUNK_SIZE
+
+                    chunk_key = (chunk_x, chunk_y)
                     # get the tile propertys (for animation)
                     tile_props = tmx_data.get_tile_properties_by_gid(gid)
                     # check if the tile has properties
                     if tile_props:
                         # check if the tile has animation frames
-                        if "frames" in tile_props:
+                        if tile_props["frames"] and len(tile_props["frames"]) > 1:
+                            print(gid, tile_props)
                             # check if there are any frames in frames
-                            if tile_props["frames"]:
-                                # create empty list to append the animaiton frames
-                                for frame in tile_props["frames"]:
-                                    frame_img = tmx_data.get_tile_image_by_gid(frame.gid)
-                                    frame_fps = 1000 / frame.duration
-                                    frames.append(frame_img)
+                            # create empty list to append the animaiton frames
+                            for frame in tile_props["frames"]:
+                                frame_img = tmx_data.get_tile_image_by_gid(frame.gid)
+                                frame_duration = frame.duration
+                                frames.append(frame_img)
+                            # create animated tile
+                            tile = AnimatedTile(tile_pos, frames, frame_duration, gid, layer.name)  # type:ignore
+                            # chunk da shiiiit outa this tile
+                            self.chunked_animated_tiles.setdefault(chunk_key, []).append(tile)
 
-                    tile_img = tmx_data.get_tile_image_by_gid(gid)
-                    if not tile_img:
-                        continue
-
-                    pos = (x * TILE_SIZE[0], y * TILE_SIZE[1])
-                    tile = Tile(pos, tile_img, gid, layer.name)  # type:ignore
-                    # chunking
-                    # calculate which chunk the tile is in
-                    chunk_x = pos[0] // CHUNK_SIZE
-                    chunk_y = pos[1] // CHUNK_SIZE
-
-                    chunk_key = (chunk_x, chunk_y)
-
-                    self.chunked_tiles.setdefault(chunk_key, []).append(tile)
+                        else:
+                            tile_img = tmx_data.get_tile_image_by_gid(gid)
+                            if not tile_img:
+                                continue
+                            # create tile
+                            tile = Tile(tile_pos, tile_img, gid, layer.name)  # type:ignore
+                            # place tile in the coresponding chunk (chunk dat shiiiit)
+                            self.chunked_tiles.setdefault(chunk_key, []).append(tile)
 
             elif isinstance(layer, pytmx.TiledObjectGroup):
                 if layer.name == "player_spawn":
