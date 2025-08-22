@@ -1,5 +1,6 @@
 from constants import *
 from pygame_animation_player import Animation, AnimationPlayer
+from utils.timer import Timer
 
 
 class Tile(pygame.sprite.Sprite):
@@ -51,3 +52,8 @@ class AnimatedTile(Tile):
         if scale not in self.cache[self.frame_index]:
             self.cache[self.frame_index][scale] = pygame.transform.scale_by(self.frames[self.frame_index], scale)
         return self.cache[self.frame_index][scale]
+
+
+class TileAnimationManager:
+    def __init__(self, chunked_tiles):
+        self.chunked_tiles = chunked_tiles

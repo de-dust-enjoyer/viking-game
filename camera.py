@@ -28,9 +28,10 @@ class CameraGroup(pygame.sprite.Group):
 
         self.zoom_center = pygame.math.Vector2(self.display_surf.get_size()) / 2
         self.offset: pygame.math.Vector2 = pygame.math.Vector2(100, 250)
+        self.visible_offset = pygame.math.Vector2 = pygame.math.Vector2(100, 250)
 
         self.velocity = pygame.Vector2(0, 0)
-        self.camera_smoothing = 300
+        self.camera_speed = 4
         self.dead_zone = 1e-8  # very small number
 
         self.target = None
@@ -43,7 +44,7 @@ class CameraGroup(pygame.sprite.Group):
         self.chunked_animated_tiles = chunked_animated_tiles
         self.chunk_size = chunk_size
 
-    def custom_draw(self):
+    def custom_draw(self, dt):
         w, h = self.display_surf.get_size()
         self.sprites_drawn = 0
         self.zoom_center.update(w / 2, h / 2)
@@ -59,7 +60,7 @@ class CameraGroup(pygame.sprite.Group):
 
         zoom = self.zoom
         if self.type == "follow":
-            self.box_movement()
+            self.box_movement(dt)
         elif self.type == "mouse":
             pass  # future mouse controll camera
         # aduasts the rect to it fits the zoomed screen
@@ -73,12 +74,12 @@ class CameraGroup(pygame.sprite.Group):
         center_pos = self.camera_rect.center
 
         # rendering of chunked big tile surfs
-        nearby_tiles = get_nearby_big_tiles(center_pos, self.chunked_tiles_dict, self.chunk_size, self.render_dist_x, self.render_dist_y)
+        nearby_big_tiles = get_nearby_big_tiles(center_pos, self.chunked_tiles_dict, self.chunk_size, self.render_dist_x, self.render_dist_y)
 
-        for sprite in nearby_tiles:
+        for sprite in nearby_big_tiles:
             sprite_pos = sprite.rect.topleft
-            adjusted_pos_x = (sprite_pos[0] - self.offset.x) * zoom
-            adjusted_pos_y = (sprite_pos[1] - self.offset.y) * zoom
+            adjusted_pos_x = (sprite_pos[0] - self.visible_offset.x) * zoom
+            adjusted_pos_y = (sprite_pos[1] - self.visible_offset.y) * zoom
             self.display_surf.blit(sprite.scale_by(zoom), (int(adjusted_pos_x), int(adjusted_pos_y)))
             self.sprites_drawn += 1
 
@@ -88,8 +89,8 @@ class CameraGroup(pygame.sprite.Group):
         )
         for sprite in nearby_static_objects:
             sprite_pos = sprite.rect.topleft
-            adjusted_pos_x = (sprite_pos[0] - self.offset.x) * zoom
-            adjusted_pos_y = (sprite_pos[1] - self.offset.y) * zoom
+            adjusted_pos_x = (sprite_pos[0] - self.visible_offset.x) * zoom
+            adjusted_pos_y = (sprite_pos[1] - self.visible_offset.y) * zoom
             self.display_surf.blit(sprite.scale_by(zoom), (int(adjusted_pos_x), int(adjusted_pos_y)))
             self.sprites_drawn += 1
 
@@ -97,9 +98,10 @@ class CameraGroup(pygame.sprite.Group):
         nearby_animated_tiles = get_nearby_tiles(center_pos, self.chunked_animated_tiles, self.chunk_size, self.render_dist_x, self.render_dist_y)
 
         for sprite in nearby_animated_tiles:
+            sprite.update(dt)
             sprite_pos = sprite.rect.topleft
-            adjusted_pos_x = (sprite_pos[0] - self.offset.x) * zoom
-            adjusted_pos_y = (sprite_pos[1] - self.offset.y) * zoom
+            adjusted_pos_x = (sprite_pos[0] - self.visible_offset.x) * zoom
+            adjusted_pos_y = (sprite_pos[1] - self.visible_offset.y) * zoom
             self.display_surf.blit(sprite.scale_by(zoom), (int(adjusted_pos_x), int(adjusted_pos_y)))
             self.sprites_drawn += 1
 
@@ -108,8 +110,8 @@ class CameraGroup(pygame.sprite.Group):
                 landing_zone_surf = pygame.Surface((sprite.landing_zone.size), pygame.SRCALPHA)
                 landing_zone_surf.fill((200, 0, 0, 50))
 
-                adjusted_pos_x = (sprite.landing_zone.left - self.offset.x) * self.zoom
-                adjusted_pos_y = (sprite.landing_zone.top - self.offset.y) * self.zoom
+                adjusted_pos_x = (sprite.landing_zone.left - self.visible_offset.x) * self.zoom
+                adjusted_pos_y = (sprite.landing_zone.top - self.visible_offset.y) * self.zoom
                 self.display_surf.blit(landing_zone_surf, (adjusted_pos_x, adjusted_pos_y))
             # ----------------------------------------------------
 
@@ -117,7 +119,7 @@ class CameraGroup(pygame.sprite.Group):
             for sprite in group:
                 if not sprite.dead:
                     sprite_pos = pygame.Vector2(sprite.rect.topleft)
-                    adjusted_pos = (sprite_pos - self.offset) * zoom
+                    adjusted_pos = (sprite_pos - self.visible_offset) * zoom
                     self.display_surf.blit(sprite.scale_by(zoom), adjusted_pos)
                     self.sprites_drawn += 1
 
@@ -125,25 +127,30 @@ class CameraGroup(pygame.sprite.Group):
                         rect_surf = pygame.Surface((sprite.collision_rect.size), pygame.SRCALPHA)
                         rect_surf.fill((0, 0, 200, 50))
 
-                        adjusted_pos_x = (sprite.collision_rect.left - self.offset.x) * self.zoom
-                        adjusted_pos_y = (sprite.collision_rect.top - self.offset.y) * self.zoom
+                        adjusted_pos_x = (sprite.collision_rect.left - self.visible_offset.x) * self.zoom
+                        adjusted_pos_y = (sprite.collision_rect.top - self.visible_offset.y) * self.zoom
                         self.display_surf.blit(rect_surf, (adjusted_pos_x, adjusted_pos_y))
 
-    def box_movement(self):
+    def box_movement(self, dt):
         if self.temp_target_timer.update():
             self.temp_target = None
         self.velocity = pygame.Vector2(0, 0)
         if self.temp_target:
-            self.velocity = (pygame.Vector2(self.temp_target.collision_rect.center) - pygame.Vector2(self.camera_rect.center)) / self.camera_smoothing
+            self.velocity = pygame.Vector2(self.temp_target.collision_rect.center) - pygame.Vector2(self.camera_rect.center)
             if abs(self.velocity.length()) < self.dead_zone:
-                self.velocity = pygame.Vector2(0, 0)
+                self.velocity.update(0, 0)
 
         elif self.target:
-            self.velocity = (pygame.Vector2(self.target.collision_rect.center) - pygame.Vector2(self.camera_rect.center)) / self.camera_smoothing
+            self.velocity = pygame.Vector2(self.target.collision_rect.center) - pygame.Vector2(self.camera_rect.center)
             if abs(self.velocity.length()) < self.dead_zone:
                 self.velocity = pygame.Vector2(0, 0)
 
-        self.offset += self.velocity
+        # calculat
+        offset_increment = self.velocity * self.camera_speed * dt
+
+        self.offset += offset_increment
+        self.visible_offset.x = round(self.offset.x)
+        self.visible_offset.y = round(self.offset.y)
 
     def remove_target(self):
         if self.temp_target:

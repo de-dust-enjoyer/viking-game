@@ -67,14 +67,10 @@ class World:
         for obj in self.dynamic_objects:
             obj.update(dt)
 
-        for chunk in self.chunked_animated_tiles.values():
-            for tile in chunk:
-                tile.update(dt)
-
         self.ui_group.update(dt)
 
         # rendering
-        self.camera_group.custom_draw()
+        self.camera_group.custom_draw(dt)
         self.ui_group.draw(self.screen)
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
