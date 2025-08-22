@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.11.2" name="punyworld-overworld" tilewidth="16" tileheight="16" tilecount="1755" columns="27">
  <image source="../../sprites/world/punyworld-overworld-tileset.png" width="432" height="1040"/>
- <tile id="38">
-  <properties>
-   <property name="collision" type="bool" value="true"/>
-  </properties>
- </tile>
- <tile id="50">
-  <properties>
-   <property name="collision" type="bool" value="true"/>
-  </properties>
- </tile>
  <tile id="270">
   <animation>
    <frame tileid="270" duration="100"/>

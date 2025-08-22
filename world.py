@@ -36,6 +36,7 @@ class World:
             [self.dynamic_objects],
             self.chunked_tile_imgs,
             self.chunked_static_objects,
+            self.chunked_animated_tiles,
             CHUNK_SIZE,
         )
         self.ui_group = UiGroup()
@@ -65,6 +66,10 @@ class World:
         # logic
         for obj in self.dynamic_objects:
             obj.update(dt)
+
+        for chunk in self.chunked_animated_tiles.values():
+            for tile in chunk:
+                tile.update(dt)
 
         self.ui_group.update(dt)
 
@@ -107,7 +112,6 @@ class World:
                     if tile_props:
                         # check if the tile has animation frames
                         if tile_props["frames"] and len(tile_props["frames"]) > 1:
-                            print(gid, tile_props)
                             # check if there are any frames in frames
                             # create empty list to append the animaiton frames
                             for frame in tile_props["frames"]:
@@ -119,14 +123,15 @@ class World:
                             # chunk da shiiiit outa this tile
                             self.chunked_animated_tiles.setdefault(chunk_key, []).append(tile)
 
-                        else:
-                            tile_img = tmx_data.get_tile_image_by_gid(gid)
-                            if not tile_img:
-                                continue
-                            # create tile
-                            tile = Tile(tile_pos, tile_img, gid, layer.name)  # type:ignore
-                            # place tile in the coresponding chunk (chunk dat shiiiit)
-                            self.chunked_tiles.setdefault(chunk_key, []).append(tile)
+                    # if the tile does not have properties create a normal tile
+                    else:
+                        tile_img = tmx_data.get_tile_image_by_gid(gid)
+                        if not tile_img:
+                            continue
+                        # create tile
+                        tile = Tile(tile_pos, tile_img, gid, layer.name)  # type:ignore
+                        # place tile in the coresponding chunk (chunk dat shiiiit)
+                        self.chunked_tiles.setdefault(chunk_key, []).append(tile)
 
             elif isinstance(layer, pytmx.TiledObjectGroup):
                 if layer.name == "player_spawn":

@@ -6,20 +6,16 @@ class Tile(pygame.sprite.Sprite):
     def __init__(self, pos: tuple, image: pygame.Surface, gid: int, layer_name: str):
         super().__init__()
         self.image: pygame.Surface = image
-        self.rect = self.image.get_frect(topleft=pos)
+        self.rect = self.image.get_rect(topleft=pos)
         self.id = gid
         self.layer: str = layer_name
 
         self.cache = {}
 
     def scale_by(self, scale) -> pygame.Surface:
-        w = int(round(self.rect.width * scale))  # type:ignore
-        h = int(round(self.rect.height * scale))  # type:ignore
-
-        key = int(round(scale * 100))  # e.g. 125 for 1.25×
-        if key not in self.cache:
-            self.cache[key] = pygame.transform.scale(self.image, (w, h))
-        return self.cache[key]
+        if scale not in self.cache:
+            self.cache[scale] = pygame.transform.scale_by(self.image, scale)
+        return self.cache[scale]
 
 
 class AnimatedTile(Tile):
@@ -33,7 +29,9 @@ class AnimatedTile(Tile):
         self.animation_timer = 0
         self.is_animated = len(frames) > 1
         self.frame_index = 0
-        self.cache = [{}]
+        self.cache = []
+        for frame in range(len(frames)):
+            self.cache.append({})
 
     def update(self, dt):
         if not self.is_animated:
@@ -45,9 +43,9 @@ class AnimatedTile(Tile):
             self.frame_index += 1
             self.animation_timer = 0
 
-            self.image = self.frames[self.frame_index]
             if self.frame_index >= len(self.frames):
                 self.frame_index = 0
+            self.image = self.frames[self.frame_index]
 
     def scale_by(self, scale) -> pygame.Surface:
         if scale not in self.cache[self.frame_index]:

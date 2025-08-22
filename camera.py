@@ -1,10 +1,19 @@
 from constants import *
 from utils.timer import Timer
-from utils.chunking import get_nearby_big_tiles, get_nearby_static_objects
+from utils.chunking import get_nearby_big_tiles, get_nearby_static_objects, get_nearby_tiles
 
 
 class CameraGroup(pygame.sprite.Group):
-    def __init__(self, surface: pygame.Surface, groups: list, chunked_tiles_dict: dict, chunked_static_objects: dict, chunk_size: int, type: str = "follow"):
+    def __init__(
+        self,
+        surface: pygame.Surface,
+        groups: list,
+        chunked_tiles_dict: dict,
+        chunked_static_objects: dict,
+        chunked_animated_tiles: dict,
+        chunk_size: int,
+        type: str = "follow",
+    ):
         super().__init__()
         self.type = type
         self.render_dist_x = RENDER_DIST[0]  # chunks
@@ -31,6 +40,7 @@ class CameraGroup(pygame.sprite.Group):
 
         self.chunked_tiles_dict = chunked_tiles_dict
         self.chunked_static_objects = chunked_static_objects
+        self.chunked_animated_tiles = chunked_animated_tiles
         self.chunk_size = chunk_size
 
     def custom_draw(self):
@@ -61,6 +71,8 @@ class CameraGroup(pygame.sprite.Group):
 
         self.display_surf.fill((91, 110, 225))
         center_pos = self.camera_rect.center
+
+        # rendering of chunked big tile surfs
         nearby_tiles = get_nearby_big_tiles(center_pos, self.chunked_tiles_dict, self.chunk_size, self.render_dist_x, self.render_dist_y)
 
         for sprite in nearby_tiles:
@@ -70,11 +82,21 @@ class CameraGroup(pygame.sprite.Group):
             self.display_surf.blit(sprite.scale_by(zoom), (int(adjusted_pos_x), int(adjusted_pos_y)))
             self.sprites_drawn += 1
 
+        # rendering  of chunked static objects
         nearby_static_objects = get_nearby_static_objects(
             center_pos, self.chunked_static_objects, self.chunk_size, self.render_dist_x + 1, self.render_dist_y + 1
         )
-
         for sprite in nearby_static_objects:
+            sprite_pos = sprite.rect.topleft
+            adjusted_pos_x = (sprite_pos[0] - self.offset.x) * zoom
+            adjusted_pos_y = (sprite_pos[1] - self.offset.y) * zoom
+            self.display_surf.blit(sprite.scale_by(zoom), (int(adjusted_pos_x), int(adjusted_pos_y)))
+            self.sprites_drawn += 1
+
+        # rendering of chunked animated tiles
+        nearby_animated_tiles = get_nearby_tiles(center_pos, self.chunked_animated_tiles, self.chunk_size, self.render_dist_x, self.render_dist_y)
+
+        for sprite in nearby_animated_tiles:
             sprite_pos = sprite.rect.topleft
             adjusted_pos_x = (sprite_pos[0] - self.offset.x) * zoom
             adjusted_pos_y = (sprite_pos[1] - self.offset.y) * zoom
