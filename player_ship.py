@@ -15,7 +15,7 @@ class PlayerShip(Ship):
         self.army = []
         self.inventory = GridInventory(13, 20)
 
-        for n in range(3):
+        for n in range(1):
             for i in item_data:
                 self.inventory.auto_place_item(Item(i))
 

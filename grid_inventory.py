@@ -209,12 +209,11 @@ class GridInventory:
         # ---> remove the item
         # if not
         # ---> keep item. only reduce the stack
-        stack_ammount_decreased = False
+
         if ammount == 0 or item.stack_count <= 1:
             self.remove_item(item_origin.x, item_origin.y)
         else:
             item.stack_count -= ammount
-            stack_ammount_decreased = True
 
         rotated = False
         if rotate_item:
