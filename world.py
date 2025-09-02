@@ -62,7 +62,7 @@ class World:
         self.inventory_menu = Inventory(self, self.ui_group)
 
     # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    def run(self, dt: float):
+    def run(self, dt: float, events):
         # input
 
         # logic
@@ -71,7 +71,7 @@ class World:
 
         self.tile_animation_manager.update()
 
-        self.ui_group.update(dt)
+        self.ui_group.update(dt, events)
 
         # rendering
         self.camera_group.custom_draw(dt)

@@ -70,7 +70,6 @@ class TileAnimationManager:
                     self.groups[tile.frame_duration].append(tile)
         self.ready = True
         self.start_all_timers()
-        print(self.groups)
 
     def update(self) -> None:
         # only update if self.init has been called at least once

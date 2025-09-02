@@ -1,17 +1,9 @@
+from pygame import event
 from constants import *
 
 
 class UiElement(pygame.sprite.Sprite):
-    def __init__(
-        self,
-        parent,
-        group: pygame.sprite.Group,
-        id: str,
-        pos: tuple,
-        background_surf: pygame.Surface,
-        centered=False,
-        **kwargs
-    ) -> None:
+    def __init__(self, parent, group: pygame.sprite.Group, id: str, pos: tuple, background_surf: pygame.Surface, centered=False, **kwargs) -> None:
         """kwargs is ui components only!!!"""
         pygame.sprite.Sprite.__init__(self, group)
         self.group = group
@@ -26,10 +18,10 @@ class UiElement(pygame.sprite.Sprite):
 
         self.visible = True
 
-    def update(self, dt):
-        self.update_components()
+    def update(self, dt, events):
+        self.update_components(events)
 
-    def update_components(self):
+    def update_components(self, events):
         for component in self.components:
             self.components[component].visible = self.visible
             if self.components[component].visible:
@@ -37,12 +29,11 @@ class UiElement(pygame.sprite.Sprite):
                     rel_mouse_pos=(
                         pygame.mouse.get_pos()[0] - self.rect.left,
                         pygame.mouse.get_pos()[1] - self.rect.top,
-                    )
+                    ),
+                    events=events,
                 )
                 # blit componets to background surf
-                self.image.blit(
-                    self.components[component].image, self.components[component].rect
-                )  # type:ignore
+                self.image.blit(self.components[component].image, self.components[component].rect)  # type:ignore
 
     def hide(self):
         self.visible = False

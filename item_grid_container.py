@@ -1,6 +1,5 @@
 from constants import *
 from data.item_data import item_data
-from item import Item
 from utils.helper_functions import text_outline
 
 
@@ -16,9 +15,9 @@ class ItemGridContainer:
         self.font = pygame.font.Font(join("assets", "font", "pixel_font.otf"), 10)
 
         if len(item_list) > 0:
-            self.item_img_size = item_list[0].image.get_width()
+            self.item_img_size = 32
         else:
-            self.item_img_size = 16
+            self.item_img_size = 32
 
         self.spacing = 4
         self.padding = 6
@@ -44,19 +43,18 @@ class ItemGridContainer:
         self.grid_rect = self.grid_surf.get_rect(center=(self.rect.width // 2, self.rect.height // 2))
         self.items_per_row = 0
         self._refresh_item_counts()
-        self._draw_items()
 
     def update(self, rel_mouse_pos: tuple) -> None:
         self._draw_items()
 
     def _calculate_grid_position(self, index: int) -> tuple:
-        self.items_per_row = (self.grid_rect.width + self.spacing) // (self.item_img_size + self.spacing)
+        self.items_per_row = (self.grid_rect.width) // (self.item_img_size)
         if self.items_per_row == 0:
-            raise ZeroDivisionError(f"container width: {self.grid_rect.width} is smaller than item img size: {self.item_img_size + self.spacing}")
+            raise ZeroDivisionError(f"container width: {self.grid_rect.width} is smaller than item img size: {self.item_img_size}")
         row = index // self.items_per_row
         col = index % self.items_per_row
 
-        return col * (self.item_img_size + self.spacing), row * (self.item_img_size + self.spacing)
+        return col * (self.item_img_size), row * (self.item_img_size)
 
     def _is_item_visible(self, index: int) -> bool:
         y = self._calculate_grid_position(index)[1]
@@ -81,7 +79,8 @@ class ItemGridContainer:
     def _draw_items(self) -> None:
         for index, item in enumerate(self.clean_item_list):
             x, y = self._calculate_grid_position(index)
-            self.grid_surf.blit(item.image, (x, y))
+            print(item.id)
+            self.grid_surf.blit(item_data[item.id]["image"], (x, y))
             if self.item_count_dict[item.id] > 1:
                 # blit num of items
                 self.grid_surf.blit(
@@ -101,8 +100,8 @@ class ItemGridContainer:
             mouse_x = rel_mouse_pos[0] - self.padding
             mouse_y = rel_mouse_pos[1] - self.padding
 
-            grid_x = mouse_x // (self.item_img_size + self.spacing)
-            grid_y = mouse_y // (self.item_img_size + self.spacing)
+            grid_x = mouse_x // (self.item_img_size)
+            grid_y = mouse_y // (self.item_img_size)
 
             if self.grid_rect.collidepoint((mouse_x, mouse_y)):
                 index = self._get_item_index((grid_x, grid_y))

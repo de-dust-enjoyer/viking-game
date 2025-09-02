@@ -4,7 +4,7 @@ from viking import Viking
 from town import Town
 from utils.chunking import get_nearby_static_objects
 from data.item_data import item_data
-from item import Item
+from grid_inventory import GridInventory, Item
 
 
 class PlayerShip(Ship):
@@ -13,18 +13,11 @@ class PlayerShip(Ship):
         self.parent = parent
         self.raid_target = None
         self.army = []
-        self.inventory = [
-            Item("wooden_spoon"),
-            Item("wooden_fork"),
-            Item("iron_kitchen_knife"),
-            Item("clay_candlestick_holder"),
-            Item("wooden_fork"),
-            Item("iron_chain_links"),
-        ]
+        self.inventory = GridInventory(13, 20)
 
-        for n in range(1):
+        for n in range(3):
             for i in item_data:
-                self.inventory.append(Item(i))
+                self.inventory.auto_place_item(Item(i))
 
         starting_crew = 4
         for i in range(starting_crew):
@@ -78,11 +71,9 @@ class PlayerShip(Ship):
         self.raid_target = None
 
     def scout(self):
-        print("suii")
         if not self.raid_target.id in self.known_towns:
             self.known_towns[self.raid_target.id] = {}
 
         self.known_towns[self.raid_target.id]["name"] = self.raid_target.id
         self.known_towns[self.raid_target.id]["army_size"] = len(self.raid_target.army)
         self.known_towns[self.raid_target.id]["loot_value"] = self.raid_target.loot_value
-        print(self.known_towns)

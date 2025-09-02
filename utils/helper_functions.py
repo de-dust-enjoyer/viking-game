@@ -49,3 +49,26 @@ def textHollow(font, message, fontcolor):
     img.blit(base, (1, 1))
     img.set_colorkey(notcolor)
     return img
+
+
+def img_with_outline(image: pygame.Surface, line_thickness: int = 1, color=(255, 255, 255), keep_original_image_size: bool = True) -> pygame.Surface:
+    """returns the image with outline. [EXPENSIVE METHOD dont use at runtime]"""
+    # create item mask (for outline)
+    item_mask = pygame.mask.from_surface(image)
+    # create one colored item suface from mask
+    item_mask_surf = item_mask.to_surface(setcolor=color, unsetcolor=None)
+    # create new surf with item dimensions
+    image_size = image.get_size()
+    if not keep_original_image_size:
+        image_size = image_size[0] + line_thickness * 2, image_size[1] + line_thickness * 2
+
+    item_img_outline = pygame.Surface(image_size, pygame.SRCALPHA)
+
+    # blit the mask surface to the image 4x with x px offset to produce outlines
+    item_img_outline.blit(item_mask_surf, (-line_thickness, 0))  # 1 left
+    item_img_outline.blit(item_mask_surf, (+line_thickness, 0))  # 2 right
+    item_img_outline.blit(item_mask_surf, (0, -line_thickness))  # 3 up
+    item_img_outline.blit(item_mask_surf, (0, +line_thickness))  # 4 down
+    item_img_outline.blit(image)
+
+    return item_img_outline
