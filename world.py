@@ -85,7 +85,7 @@ class World:
             (0, 0),
         )
         pygame.display.flip()
-        tmx_data = pytmx.util_pygame.load_pygame(join("assets", "tiled", "levels", "test_world_02.tmx"))  # type:ignore
+        tmx_data = pytmx.util_pygame.load_pygame(join("assets", "tiled", "levels", "Lindisfarne.tmx"))  # type:ignore
         self.tilesize = (tmx_data.tilewidth, tmx_data.tileheight)
         self.world_size = (
             tmx_data.width * self.tilesize[0],
