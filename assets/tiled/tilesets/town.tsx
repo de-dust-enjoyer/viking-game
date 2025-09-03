@@ -5,6 +5,7 @@
   <properties>
    <property name="army_strength" type="int" value="0"/>
    <property name="loot_value" type="int" value="0"/>
+   <property name="population" type="int" value="0"/>
   </properties>
  </tile>
 </tileset>
