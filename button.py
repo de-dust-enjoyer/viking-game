@@ -5,7 +5,6 @@ import pygame
 
 class Button:
 	def __init__(self, id:str, pos:tuple, path_to_img_folder:str, centered:bool = False, method:Optional[MethodType] = None, arg = None):
-		super().__init__()
 
 		self.visible = True
 		
@@ -54,6 +53,7 @@ class Button:
 				self.was_pressed = True
 				if self.method:
 					if self.arg:
+						print(self.method, self.arg)
 						self.method(self.arg)
 					else:
 						self.method()

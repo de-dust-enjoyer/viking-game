@@ -7,6 +7,7 @@ class Town(Object):
         Object.__init__(self, id, layer_name, group)
         self.image = image
         self.rect = self.image.get_frect(topleft= pos)
+        self.collision_rect = self.rect.copy()
         self.attributes = attributes
         self.army = []
         for attribute in self.attributes:
@@ -14,6 +15,8 @@ class Town(Object):
                 for i in range(self.attributes[attribute]):
                     soldier = Soldier()
                     self.army.append(soldier)
+            elif attribute == "loot_value":
+                self.loot_value = self.attributes[attribute]
 
         self.landing_zone = landing_zones[self.id]
 
