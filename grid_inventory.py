@@ -312,10 +312,10 @@ class GridInventoryViewport:
         self.grid_x = inventory.width
         self.grid_y = inventory.height
         self.tilesize = tilesize
-        self.seperator_line = 1
-        self.bg_color = (135, 86, 59)
-        self.line_color = (145, 96, 69)
-        self.line_color2 = (125, 76, 49)
+        self.seperator_line = 2
+        self.bg_color = (100, 66, 47)
+        self.line_color = (72, 40, 26)
+        self.line_color2 = (72, 40, 26)
 
         self.hover_surf_clear = pygame.Surface((self.tilesize, self.tilesize), pygame.SRCALPHA)
         self.hover_surf_clear.fill((255, 255, 255, 25))

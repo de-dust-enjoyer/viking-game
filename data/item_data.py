@@ -1,4 +1,5 @@
 from enum import Enum
+import random
 
 # all items need a:
 # name
@@ -49,6 +50,32 @@ rarity_color: dict = {
     Rarity.LEGENDARY: (223, 135, 0),
     Rarity.ONEOFAKIND: (221, 52, 57),
 }
+
+
+# def generate_loot(category: ItemType, value: int, luck: int):
+#     if not item_data_sorted.keys():
+#         data = {}
+#         categorys = []
+#         raritys = []
+#         for item_id, item_attr in item_data.items():
+#             items.append(item_id)
+#             if item_attr["category"] not in categorys:
+#                 categorys.append(item_attr["category"])
+#             if item_attr["rarity"] not in raritys:
+#                 raritys.append(item_attr["rarity"])
+#         for category in categorys:
+#             data[category] = {}
+#             for rarity in raritys:
+#                 data[category][rarity] = {}
+
+#         for item_id, item_attr in item_data.items():
+#             data[item_attr["category"]][item_attr["rarity"]][item_id] = item_attr
+
+#         item_data_sorted = data
+#         print(item_data_sorted)
+
+
+# item_data_sorted = {}
 
 item_data = {
     # horns (there will be a lot of them) # horns horns horns horns horns horns horns horns horns horns horns horns horns horns horns horns horns
@@ -431,5 +458,30 @@ item_data = {
         "stackable": False,
         "max_stack": 1,
     },
-    # resources resources resources resources resources resources resources resources resources resources resources resources resources resources resources resources
+    "log": {
+        "name": "Wood Log",
+        "image": None,
+        "image_outline": None,
+        "image_alpha": None,
+        "size": (4, 1),
+        "value": 1,
+        "category": ItemType.RESOURCE,
+        "description": "Wooden log. Good for building stuff.",
+        "rarity": Rarity.COMMON,
+        "stackable": True,
+        "max_stack": 4,
+    },
+    "board": {
+        "name": "Wood Board",
+        "image": None,
+        "image_outline": None,
+        "image_alpha": None,
+        "size": (4, 1),
+        "value": 2,
+        "category": ItemType.RESOURCE,
+        "description": "cut wooden log.",
+        "rarity": Rarity.COMMON,
+        "stackable": True,
+        "max_stack": 12,
+    },
 }

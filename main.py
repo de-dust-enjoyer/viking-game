@@ -28,7 +28,7 @@ class Game:
             # get the image path with the item properties
             img_path = join("assets", "sprites", "items", str(item_data[item]["category"]), item + ".png")
             # load the image and convert it and scale it
-            img = pygame.transform.scale2x(pygame.image.load(img_path).convert_alpha())
+            img = pygame.transform.scale_by(pygame.image.load(img_path).convert_alpha(), 2)
             item_data[item]["image"] = img
             item_data[item]["image_outline"] = img_with_outline(image=img, color=rarity_color[item_data[item]["rarity"]], line_thickness=2)
             item_data[item]["image_alpha"] = img.copy()  # need copy instead of pointer
