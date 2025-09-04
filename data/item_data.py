@@ -43,39 +43,89 @@ class Rarity(Enum):
 
 
 rarity_color: dict = {
-    Rarity.COMMON: (228, 231, 236),
-    Rarity.UNCOMMON: (95, 187, 231),
-    Rarity.RARE: (170, 45, 152),
-    Rarity.EPIC: (89, 65, 146),
-    Rarity.LEGENDARY: (223, 135, 0),
-    Rarity.ONEOFAKIND: (221, 52, 57),
+    Rarity.COMMON: (194, 177, 169),
+    Rarity.UNCOMMON: (112, 148, 255),
+    Rarity.RARE: (165, 91, 232),
+    Rarity.EPIC: (204, 47, 65),
+    Rarity.LEGENDARY: (233, 149, 7),
+    Rarity.ONEOFAKIND: (249, 199, 255),
 }
 
 
-# def generate_loot(category: ItemType, value: int, luck: int):
-#     if not item_data_sorted.keys():
-#         data = {}
-#         categorys = []
-#         raritys = []
-#         for item_id, item_attr in item_data.items():
-#             items.append(item_id)
-#             if item_attr["category"] not in categorys:
-#                 categorys.append(item_attr["category"])
-#             if item_attr["rarity"] not in raritys:
-#                 raritys.append(item_attr["rarity"])
-#         for category in categorys:
-#             data[category] = {}
-#             for rarity in raritys:
-#                 data[category][rarity] = {}
+def generate_loot(category: ItemType, value: int, luck: int):
+    if not item_data_sorted.keys():
+        sort_item_data()
+    if category not in item_data_sorted:
+        return []
 
-#         for item_id, item_attr in item_data.items():
-#             data[item_attr["category"]][item_attr["rarity"]][item_id] = item_attr
+    rarity_weight = [50 - luck, 30 - luck // 2, 10, 4, 1, 0]
+    data = item_data_sorted[category]
+    budget = random.randrange((value - value // 4) + luck, (value + value // 4) + luck)
+    items = []
+    commons = 0
+    uncommons = 0
+    rares = 0
+    epics = 0
+    legendarys = 0
+    worth = 0
+    while budget > 0:
+        item_selected = False
+        while not item_selected:
+            rarity = random.choices(list(Rarity._member_map_.values()), rarity_weight)[0]
+            if not data[rarity]:  # if no items are from this rarity loop again
+                continue
 
-#         item_data_sorted = data
-#         print(item_data_sorted)
+            if rarity == Rarity.COMMON:
+                commons += 1
+            elif rarity == Rarity.UNCOMMON:
+                uncommons += 1
+            elif rarity == Rarity.RARE:
+                rares += 1
+            elif rarity == Rarity.EPIC:
+                epics += 1
+            elif rarity == Rarity.LEGENDARY:
+                legendarys += 1
+
+            item = random.choice(list(data[rarity].keys()))
+            items.append(item)
+            item_selected = True
+
+            budget -= item_data[item]["value"]
+            worth += item_data[item]["value"]
+
+    print(rarity_weight)
+    print(f"commons {commons}")
+    print(f"uncommons {uncommons}")
+    print(f"rares {rares}")
+    print(f"epics {epics}")
+    print(f"legendarys {legendarys}")
+    print(f"num items {len(items)}")
+    print(f"total worth {worth}")
+
+    return items
 
 
-# item_data_sorted = {}
+def sort_item_data():
+    global item_data_sorted
+    data = {}
+    categorys = []
+    raritys = []
+    for item_id, item_attr in item_data.items():
+        if item_attr["category"] not in categorys:
+            categorys.append(item_attr["category"])
+        if item_attr["rarity"] not in raritys:
+            raritys.append(item_attr["rarity"])
+    for category in categorys:
+        data[category] = {}
+        for rarity in raritys:
+            data[category][rarity] = {}
+    for item_id, item_attr in item_data.items():
+        data[item_attr["category"]][item_attr["rarity"]][item_id] = item_attr
+    item_data_sorted = data
+    print("SORTED ITEM DATA CREATED!!!")
+
+
+item_data_sorted = {}
 
 item_data = {
     # horns (there will be a lot of them) # horns horns horns horns horns horns horns horns horns horns horns horns horns horns horns horns horns
@@ -86,9 +136,10 @@ item_data = {
         "image_alpha": None,
         "size": (1, 2),
         "value": 1,
+        "weight": 0.5,
         "category": ItemType.HOUSEHOLD,
         "description": "horn to drink from. gulp.",
-        "rarity": Rarity.UNCOMMON,
+        "rarity": Rarity.LEGENDARY,
         "stackable": False,
         "max_stack": 1,
     },
@@ -100,6 +151,7 @@ item_data = {
         "image_alpha": None,
         "size": (2, 1),
         "value": 1,
+        "weight": 0.05,
         "category": ItemType.HOUSEHOLD,
         "description": "wooden spoon used for cooking.",
         "rarity": Rarity.COMMON,
@@ -113,6 +165,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 3,
+        "weight": 0.3,
         "category": ItemType.HOUSEHOLD,
         "description": "clay jar for storing food",
         "rarity": Rarity.COMMON,
@@ -126,6 +179,7 @@ item_data = {
         "image_alpha": None,
         "size": (2, 2),
         "value": 2,
+        "weight": 0.1,
         "category": ItemType.HOUSEHOLD,
         "description": "wooden plate to eat of",
         "rarity": Rarity.COMMON,
@@ -139,6 +193,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 3,
+        "weight": 0.05,
         "category": ItemType.HOUSEHOLD,
         "description": "wooden cup to drink from",
         "rarity": Rarity.COMMON,
@@ -152,6 +207,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 23,
+        "weight": 0.5,
         "category": ItemType.HOUSEHOLD,
         "description": "silver cup to drink from",
         "rarity": Rarity.RARE,
@@ -165,6 +221,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 58,
+        "weight": 1,
         "category": ItemType.HOUSEHOLD,
         "description": "wooden cup to drink from",
         "rarity": Rarity.EPIC,
@@ -178,6 +235,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 2,
+        "weight": 0.5,
         "category": ItemType.HOUSEHOLD,
         "description": "practical candlestick holder for ilumination.",
         "rarity": Rarity.COMMON,
@@ -191,6 +249,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 1,
+        "weight": 0.02,
         "category": ItemType.HOUSEHOLD,
         "description": "basic towels made from linen.",
         "rarity": Rarity.COMMON,
@@ -204,6 +263,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 3,
+        "weight": 0.5,
         "category": ItemType.HOUSEHOLD,
         "description": "iron chain links use for a lot of stuff.",
         "rarity": Rarity.COMMON,
@@ -217,6 +277,7 @@ item_data = {
         "image_alpha": None,
         "size": (2, 2),
         "value": 6,
+        "weight": 2,
         "category": ItemType.HOUSEHOLD,
         "description": "cooking pot made from iron.",
         "rarity": Rarity.COMMON,
@@ -230,6 +291,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 4,
+        "weight": 0.3,
         "category": ItemType.HOUSEHOLD,
         "description": "for cutting stuff lol.",
         "rarity": Rarity.COMMON,
@@ -243,6 +305,7 @@ item_data = {
         "image_alpha": None,
         "size": (2, 1),
         "value": 9,
+        "weight": 1.5,
         "category": ItemType.HOUSEHOLD,
         "description": "sharp knife to cut food, or foes . . .",
         "rarity": Rarity.UNCOMMON,
@@ -256,6 +319,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 9,
+        "weight": 0.5,
         "category": ItemType.HOUSEHOLD,
         "description": "salty . . .",
         "rarity": Rarity.UNCOMMON,
@@ -269,6 +333,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 2),
         "value": 8,
+        "weight": 2,
         "category": ItemType.HOUSEHOLD,
         "description": "for making the dark go away.",
         "rarity": Rarity.UNCOMMON,
@@ -282,6 +347,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 2),
         "value": 1,
+        "weight": 0.5,
         "category": ItemType.HOUSEHOLD,
         "description": "primitive glass bottle to store liquids",
         "rarity": Rarity.UNCOMMON,
@@ -295,6 +361,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 23,
+        "weight": 0.5,
         "category": ItemType.HOUSEHOLD,
         "description": "decorative candlestick holder for ilumination.",
         "rarity": Rarity.RARE,
@@ -308,6 +375,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 57,
+        "weight": 1,
         "category": ItemType.HOUSEHOLD,
         "description": "luxury candlestick holder for ilumination.",
         "rarity": Rarity.LEGENDARY,
@@ -322,6 +390,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 42,
+        "weight": 0.01,
         "category": ItemType.VALUABLE,
         "description": "small silver finger ring.",
         "rarity": Rarity.RARE,
@@ -335,6 +404,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 62,
+        "weight": 0.01,
         "category": ItemType.VALUABLE,
         "description": "small silver finger ring with Amethist stone.",
         "rarity": Rarity.EPIC,
@@ -348,6 +418,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 71,
+        "weight": 0.01,
         "category": ItemType.VALUABLE,
         "description": "small silver finger ring with Saffire stone.",
         "rarity": Rarity.EPIC,
@@ -361,6 +432,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 75,
+        "weight": 0.01,
         "category": ItemType.VALUABLE,
         "description": "small silver finger ring with Ruby stone.",
         "rarity": Rarity.EPIC,
@@ -374,6 +446,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 74,
+        "weight": 0.01,
         "category": ItemType.VALUABLE,
         "description": "small gold finger ring.",
         "rarity": Rarity.EPIC,
@@ -387,6 +460,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 87,
+        "weight": 0.01,
         "category": ItemType.VALUABLE,
         "description": "small gold finger ring with Amethist Stone.",
         "rarity": Rarity.EPIC,
@@ -400,6 +474,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 92,
+        "weight": 0.01,
         "category": ItemType.VALUABLE,
         "description": "small gold finger ring with Ruby Stone.",
         "rarity": Rarity.EPIC,
@@ -413,6 +488,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 90,
+        "weight": 0.01,
         "category": ItemType.VALUABLE,
         "description": "small gold finger ring with Saffire Stone.",
         "rarity": Rarity.EPIC,
@@ -426,6 +502,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 120,
+        "weight": 0.01,
         "category": ItemType.VALUABLE,
         "description": "small gold finger ring with Diamand Stone.",
         "rarity": Rarity.LEGENDARY,
@@ -439,6 +516,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 51,
+        "weight": 0.05,
         "category": ItemType.VALUABLE,
         "description": "beautyfull silver bracelet.",
         "rarity": Rarity.RARE,
@@ -452,6 +530,7 @@ item_data = {
         "image_alpha": None,
         "size": (1, 1),
         "value": 81,
+        "weight": 0.05,
         "category": ItemType.VALUABLE,
         "description": "beautyfull gold bracelet.",
         "rarity": Rarity.EPIC,
@@ -465,6 +544,7 @@ item_data = {
         "image_alpha": None,
         "size": (4, 1),
         "value": 1,
+        "weight": 4,
         "category": ItemType.RESOURCE,
         "description": "Wooden log. Good for building stuff.",
         "rarity": Rarity.COMMON,
@@ -478,6 +558,7 @@ item_data = {
         "image_alpha": None,
         "size": (4, 1),
         "value": 2,
+        "weight": 1,
         "category": ItemType.RESOURCE,
         "description": "cut wooden log.",
         "rarity": Rarity.COMMON,

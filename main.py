@@ -22,7 +22,7 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.debug_info = DebugInfo(pygame.font.Font(join("assets", "font", "Norse-Bold.otf"), 14))
-
+        color = "#FFFFFF"
         # load all item images
         for item in item_data:
             # get the image path with the item properties

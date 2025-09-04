@@ -3,7 +3,7 @@ from base_classes.ship import Ship
 from viking import Viking
 from town import Town
 from utils.chunking import get_nearby_static_objects
-from data.item_data import item_data
+from data.item_data import item_data, generate_loot, ItemType
 from grid_inventory import GridInventory, Item
 
 
@@ -15,9 +15,12 @@ class PlayerShip(Ship):
         self.army = []
         self.inventory = GridInventory(13, 20)
 
-        for n in range(1):
-            for i in item_data:
-                self.inventory.auto_place_item(Item(i))
+        initial_loot = generate_loot(ItemType.HOUSEHOLD, 300, 0) + generate_loot(ItemType.VALUABLE, 500, 10) + generate_loot(ItemType.RESOURCE, 20, 10)
+        items = []
+        for item in initial_loot:
+            items.append(Item(item))
+
+        self.inventory.auto_place_item_list(items)
 
         starting_crew = 4
         for i in range(starting_crew):

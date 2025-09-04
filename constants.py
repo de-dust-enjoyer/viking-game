@@ -16,3 +16,6 @@ RENDER_DIST = (4, 3)  # x, y in chunks
 
 
 NO_COLOR = (1, 1, 1)
+
+
+LEVEL_NAME = "test_world_02.tmx"
