@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Optional, List, Dict, Tuple
 from scrollbar import ScrollBar
 from utils.helper_functions import text_outline
+import time
 
 
 @dataclass(frozen=True)
@@ -131,7 +132,8 @@ class GridInventory:
                     return False
         return True
 
-    def place_item(self, item: Item, x: int, y: int, ammount: int = 0) -> bool:
+    def place_item(self, item: Item, x: int, y: int) -> bool:
+        self.changed = True
         """place item at pos(x, y)"""
         if not self.can_place_item(item, x, y):
             return False
@@ -162,16 +164,12 @@ class GridInventory:
                     # other slots occupied by item
                     slot.item = item
                     slot.occupied_by_item_at = origin_pos
-        if ammount > 0:
-            # if there should be a specified num of items placed
-            # check if the ammout is equal or less than the items in this slot
-            if ammount <= item.stack_count:
-                item.stack_count = ammount
 
         self.items[origin_pos] = item
         return True
 
     def remove_item(self, x: int, y: int) -> Optional[Item]:
+        self.changed = True
         """remove item at pos. (must be item origin)"""
         # check if pos is valid
         if not self.is_valid_pos(x, y):
@@ -215,19 +213,21 @@ class GridInventory:
         else:
             item.stack_count -= ammount
 
+        item_to_place = item.copy()
+        item_to_place.stack_count = ammount if ammount > 0 else item.stack_count
         rotated = False
         if rotate_item:
-            item.rotate()
+            item_to_place.rotate()
             rotated = True
 
         # if the item cannot be placed. place back at og pos
 
-        if not self.place_item(item.copy(), target_x, target_y, ammount):
+        if not self.place_item(item_to_place, target_x, target_y):
             if rotated:
                 # if the item was rotated reset rotation
                 item.rotate()
 
-            self.place_item(item, item_origin.x, item_origin.y)
+            print(self.place_item(item_to_place, item_origin.x, item_origin.y))
 
         return True
 
@@ -306,7 +306,7 @@ class GridInventory:
 
 
 class GridInventoryViewport:
-    def __init__(self, tilesize: int, height: int, inventory: GridInventory):
+    def __init__(self, pos: tuple, tilesize: int, height: int, inventory: GridInventory):
         self.inventory = inventory
         self.height = height
         self.grid_x = inventory.width
@@ -335,13 +335,14 @@ class GridInventoryViewport:
         self.item_ammount = 0  # 0 means take all
 
         self.offset_y: int = 0
+        self.scrollspeed = 15
 
         scrollbar_width = 10
 
         self.image = pygame.Surface((self.grid_x * self.tilesize + self.seperator_line + scrollbar_width, self.height))
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect(topleft=pos)
 
-        self.scrollbar = ScrollBar(scrollbar_width, self.image.get_height(), self.grid_y * self.tilesize, self.bg_color, self.line_color, self.rect.topright)
+        self.scrollbar = ScrollBar(scrollbar_width, self.image.get_height(), self.grid_y * self.tilesize, self.bg_color, self.line_color, (self.rect.width, 0))
 
         self.redraw_surface()
 
@@ -358,6 +359,9 @@ class GridInventoryViewport:
         return rel_mouse_pos[0] // self.tilesize, rel_mouse_pos[1] // self.tilesize
 
     def draw_items(self):
+        if not self.inventory.changed:
+            return
+        self.inventory.changed = False
         """draws all items on the surface (probably should only be called when inventory changed)"""
         # reset item surf
         self.redraw_surface()
@@ -388,20 +392,40 @@ class GridInventoryViewport:
             if item.rotated:
                 item_img = pygame.transform.rotate(item_img, 90.0)
 
-            self.image.blit(item_img, pos * self.tilesize)
+            self.image.blit(item_img, (pos.x * self.tilesize, pos.y * self.tilesize - self.offset_y))
             self.draw_item_ammount_num(item, pos.x, pos.y)
 
     def redraw_surface(self):
         # redraw the grid
         self.image.fill(self.bg_color)
         for line in range(self.grid_x + 1):
-            pygame.draw.line(self.image, self.line_color2, (line * self.tilesize - 1, 0), (line * self.tilesize - 1, self.rect.height), self.seperator_line)
-            pygame.draw.line(self.image, self.line_color2, (line * self.tilesize + 1, 0), (line * self.tilesize + 1, self.rect.height), self.seperator_line)
-            pygame.draw.line(self.image, self.line_color, (line * self.tilesize, 0), (line * self.tilesize, self.rect.height), self.seperator_line)
+            pygame.draw.line(
+                self.image,
+                self.line_color2,
+                (line * self.tilesize - 1, 0 - self.offset_y),
+                (line * self.tilesize - 1, self.grid_y * self.tilesize - self.offset_y),
+                self.seperator_line,
+            )
+            pygame.draw.line(
+                self.image,
+                self.line_color2,
+                (line * self.tilesize + 1, 0 - self.offset_y),
+                (line * self.tilesize + 1, self.grid_y * self.tilesize - self.offset_y),
+                self.seperator_line,
+            )
+            pygame.draw.line(
+                self.image, self.line_color, (line * self.tilesize, 0 - self.offset_y), (line * self.tilesize, self.grid_y * self.tilesize - self.offset_y), self.seperator_line
+            )
         for line in range(self.grid_y + 1):
-            pygame.draw.line(self.image, self.line_color2, (0, line * self.tilesize - 1), (self.rect.width, line * self.tilesize - 1), self.seperator_line)
-            pygame.draw.line(self.image, self.line_color2, (0, line * self.tilesize + 1), (self.rect.width, line * self.tilesize + 1), self.seperator_line)
-            pygame.draw.line(self.image, self.line_color, (0, line * self.tilesize), (self.rect.width, line * self.tilesize), self.seperator_line)
+            pygame.draw.line(
+                self.image, self.line_color2, (0, line * self.tilesize - 1 - self.offset_y), (self.rect.width, line * self.tilesize - 1 - self.offset_y), self.seperator_line
+            )
+            pygame.draw.line(
+                self.image, self.line_color2, (0, line * self.tilesize + 1 - self.offset_y), (self.rect.width, line * self.tilesize + 1 - self.offset_y), self.seperator_line
+            )
+            pygame.draw.line(
+                self.image, self.line_color, (0, line * self.tilesize - self.offset_y), (self.rect.width, line * self.tilesize - self.offset_y), self.seperator_line
+            )
 
     def draw_selected_item_at_cursor(self, rel_mouse_pos: tuple):
         """draws the item contained in the self.item_selected var at the curser with an offset
@@ -413,17 +437,16 @@ class GridInventoryViewport:
             item_img = item_data[self.selected_item.id]["image_outline"]
             # get the pos the item is to be be drawn at. just the cursor pos + the dist to the item origin(topleft)
             pos_x = rel_mouse_pos[0] + self.mouse_offset[0]
-            pos_y = rel_mouse_pos[1] + self.mouse_offset[1]
+            pos_y = rel_mouse_pos[1] + self.mouse_offset[1] - self.offset_y
             # if the item is to be rotated after dragging: rotate the item img
             rotated = False
             if self.rotate_selected_item and self.selected_item.rotated:
                 pass
             elif self.selected_item.rotated or self.rotate_selected_item:
                 item_img = pygame.transform.rotate(item_img, 90)
-                rotated = True
 
             # adust the grid pos for the placement indicators (trans squares) to be at the center of the item rather than the topleft
-            grid_x, grid_y = self.get_grid_pos_from_mouse_pos((pos_x + self.tilesize // 2, pos_y + self.tilesize // 2))
+            grid_x, grid_y = self.get_grid_pos_from_mouse_pos((pos_x + self.tilesize // 2, pos_y + self.offset_y + self.tilesize // 2))
             # draw white indicator when the item is placable at that location
             if self.inventory.can_place_item(self.selected_item, grid_x, grid_y, self.rotate_selected_item):
                 hover_surf = self.hover_surf_clear
@@ -433,34 +456,46 @@ class GridInventoryViewport:
             # loop for item size to create matching indicator rect
             for dy in range(item_img.get_width() // self.tilesize):
                 for dx in range(item_img.get_height() // self.tilesize):
-                    self.image.blit(hover_surf, ((grid_x + dy) * self.tilesize, (grid_y + dx) * self.tilesize))
+                    self.image.blit(hover_surf, ((grid_x + dy) * self.tilesize, (grid_y + dx) * self.tilesize - self.offset_y))
             # blit the item img to the surf
             self.image.blit(item_img, (pos_x, pos_y))
 
     def draw_item_ammount_num(self, item: Item, x: int, y: int):
         if item.stack_count > 1 and not item.selected:
             width, height = item.get_dimensions()
-            num_pos_x = x * self.tilesize + (width) * self.tilesize - 10
-            num_pos_y = y * self.tilesize + (height) * self.tilesize - 10
             text = str(item.stack_count)
-
             text_surf = text_outline(self.font, text, self.text_color, self.outline_color)
+            num_pos_x = x * self.tilesize + (width) * self.tilesize - text_surf.get_width()
+            num_pos_y = y * self.tilesize + (height) * self.tilesize - 10
 
-            self.image.blit(text_surf, (num_pos_x, num_pos_y))
+            self.image.blit(text_surf, (num_pos_x, num_pos_y - self.offset_y))
 
     def update(self, **kwargs):
+        # start = time.time()
         # get mouse button state
         mouse_buttons = pygame.mouse.get_pressed()
         # get the relative mouse pos
-        rel_mouse_pos: tuple = kwargs["rel_mouse_pos"]
+        mouse_pos: tuple = kwargs["rel_mouse_pos"]
+        rel_mouse_pos = mouse_pos[0], mouse_pos[1] + self.offset_y
         # get the events (buttons mouse etc. for scrolling and keydown events)
         events = kwargs["events"]
+        for event in events:
+            # check if mousewheel moved
+            if event.type == pygame.MOUSEWHEEL:
+                # check if mouse is over inventory
+                if 0 < mouse_pos[0] < self.rect.width and 0 < mouse_pos[1] < self.rect.height:
+                    self.inventory.changed = True
+                    self.offset_y -= self.scrollspeed * event.y
+                    self.offset_y = max(0, (min(self.offset_y, self.grid_y * self.tilesize - self.rect.height + 3)))
+                    self.scrollbar.update(self.offset_y)
+
         # get the item under the cursor
         item = self.get_item_under_mouse(rel_mouse_pos)
         # check if there was a item under the cursor
         if item is not None:
             # if there is highlight it with outline
             item.highlighted = True
+            self.inventory.changed = True
             # if the player clicks at an item
             if (mouse_buttons[0] or mouse_buttons[2]) and not self.dragging_item:
                 if mouse_buttons[2]:
@@ -482,6 +517,7 @@ class GridInventoryViewport:
 
         if self.selected_item is not None:
             self.selected_item.selected = True
+            self.inventory.changed = True
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_r and self.dragging_item:
@@ -498,8 +534,13 @@ class GridInventoryViewport:
                 self.dragging_item = False
                 self.selected_item = None
                 self.item_ammount = 0
-
+        # print("update_logic:", (time.time() - start) * 1000)
+        # start = time.time()
         self.draw_items()
-        self.scrollbar.update(0)
+        # print("draw_items:", (time.time() - start) * 10000)
+        # start = time.time()
         self.image.blit(self.scrollbar.image, self.scrollbar.rect)
+        # print("scrollbar blitting:", (time.time() - start) * 10000)
+        # start = time.time()
         self.draw_selected_item_at_cursor(rel_mouse_pos)
+        # print("draw_item_at_cursor:", (time.time() - start) * 10000)

@@ -13,9 +13,9 @@ class PlayerShip(Ship):
         self.parent = parent
         self.raid_target = None
         self.army = []
-        self.inventory = GridInventory(13, 20)
+        self.inventory = GridInventory(10, 20)
 
-        initial_loot = generate_loot(ItemType.HOUSEHOLD, 300, 0) + generate_loot(ItemType.VALUABLE, 500, 10) + generate_loot(ItemType.RESOURCE, 20, 10)
+        initial_loot = generate_loot(ItemType.HOUSEHOLD, 500, 0) + generate_loot(ItemType.VALUABLE, 40, 10) + generate_loot(ItemType.RESOURCE, 10, 10)
         items = []
         for item in initial_loot:
             items.append(Item(item))

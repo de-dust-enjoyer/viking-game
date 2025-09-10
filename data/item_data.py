@@ -93,15 +93,6 @@ def generate_loot(category: ItemType, value: int, luck: int):
             budget -= item_data[item]["value"]
             worth += item_data[item]["value"]
 
-    print(rarity_weight)
-    print(f"commons {commons}")
-    print(f"uncommons {uncommons}")
-    print(f"rares {rares}")
-    print(f"epics {epics}")
-    print(f"legendarys {legendarys}")
-    print(f"num items {len(items)}")
-    print(f"total worth {worth}")
-
     return items
 
 
@@ -254,7 +245,7 @@ item_data = {
         "description": "basic towels made from linen.",
         "rarity": Rarity.COMMON,
         "stackable": True,
-        "max_stack": 2,
+        "max_stack": 8,
     },
     "iron_chain_links": {
         "name": "Iron Chain Links",
@@ -268,7 +259,7 @@ item_data = {
         "description": "iron chain links use for a lot of stuff.",
         "rarity": Rarity.COMMON,
         "stackable": True,
-        "max_stack": 8,
+        "max_stack": 12,
     },
     "iron_pot": {
         "name": "Iron Pot",
@@ -324,7 +315,7 @@ item_data = {
         "description": "salty . . .",
         "rarity": Rarity.UNCOMMON,
         "stackable": True,
-        "max_stack": 8,
+        "max_stack": 24,
     },
     "iron_lantern": {
         "name": "Iron Lantern",

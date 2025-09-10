@@ -22,18 +22,19 @@ class UiElement(pygame.sprite.Sprite):
         self.update_components(events)
 
     def update_components(self, events):
-        for component in self.components:
-            self.components[component].visible = self.visible
-            if self.components[component].visible:
-                self.components[component].update(
+        for component in self.components.values():
+            component.visible = self.visible
+            if component.visible:
+                component.update(
                     rel_mouse_pos=(
-                        pygame.mouse.get_pos()[0] - self.rect.left,
-                        pygame.mouse.get_pos()[1] - self.rect.top,
+                        pygame.mouse.get_pos()[0] - self.rect.left - component.rect.left,
+                        pygame.mouse.get_pos()[1] - self.rect.top - component.rect.top,
                     ),
                     events=events,
                 )
+
                 # blit componets to background surf
-                self.image.blit(self.components[component].image, self.components[component].rect)  # type:ignore
+                self.image.blit(component.image, component.rect)  # type:ignore
 
     def hide(self):
         self.visible = False
