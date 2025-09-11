@@ -1,3 +1,4 @@
+from pygame import K_RIGHT
 from constants import *
 from base_classes.ship import Ship
 from viking import Viking
@@ -35,15 +36,15 @@ class PlayerShip(Ship):
         keys = pygame.key.get_pressed()
 
         # vertical
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w] or keys[pygame.K_UP]:
             self.velocity.y = -1
-        elif keys[pygame.K_s]:
+        elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
             self.velocity.y = +1
 
         # horizontal
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             self.velocity.x = -1
-        elif keys[pygame.K_d]:
+        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.velocity.x = +1
 
     def get_combat_strengt(self) -> tuple:
