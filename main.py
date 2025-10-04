@@ -1,5 +1,6 @@
 from pygame import color
 from constants import *
+from level import Level
 from utils.game_state_manager import GameStateManager
 from world import World
 from utils.debug_info import DebugInfo
@@ -16,8 +17,9 @@ class Game:
         # game_state stuff
         self.game_state_manager = GameStateManager(STARTING_STATE)
         self.world = World(self.screen, self.game_state_manager, self)
+        self.level = Level(self.screen, self.game_state_manager, self)
 
-        self.states = {"world": self.world}
+        self.states = {"world": self.world, "level": self.level}
 
         self.clock = pygame.time.Clock()
 
@@ -50,7 +52,10 @@ class Game:
                         self.world.inventory_menu.toggle_visibility()
 
             # run the selected game state
-            self.states[self.game_state_manager.get_state()].run(dt, events)
+            state, level = self.game_state_manager.get_state()
+            if level is not None:
+                self.level.town = self.world.player.raid_target  # type:ignore
+            self.states[state].run(dt, events)
 
             # debugging osd
             self.debug_info.add("FPS", round(self.clock.get_fps(), 1))

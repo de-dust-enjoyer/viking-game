@@ -1,71 +1,79 @@
 from types import MethodType
-from typing import Optional
+from typing import (
+    Optional,
+)
 import pygame
 
 
 class Button:
-	def __init__(self, id:str, pos:tuple, path_to_img_folder:str, centered:bool = False, method:Optional[MethodType] = None, arg = None):
+    def __init__(self, id: str, pos: tuple, path_to_img_folder: str, centered: bool = False, **kwargs):
+        self.visible = True
 
-		self.visible = True
-		
-		self.images = {"idle": pygame.image.load(f"{path_to_img_folder}{id}_idle.png").convert_alpha()
-					, "pressed": pygame.image.load(f"{path_to_img_folder}{id}_pressed.png").convert_alpha()
-					, "hover": pygame.image.load(f"{path_to_img_folder}{id}_hover.png").convert_alpha()}
-		
-		self.image:pygame.Surface = self.images["idle"]
+        if "arg" in kwargs:
+            self.arg = kwargs["arg"]
+        else:
+            self.arg = None
+        if "method" in kwargs:
+            self.method = kwargs["method"]
+        else:
+            self.arg = None
 
-		self.rect:pygame.Rect = self.image.get_rect()
-		
-		self.clicked = False
-		self.was_pressed = False
+        self.id = id
+        self.images = {
+            "idle": pygame.image.load(f"{path_to_img_folder}{id}_idle.png").convert_alpha(),
+            "pressed": pygame.image.load(f"{path_to_img_folder}{id}_pressed.png").convert_alpha(),
+            "hover": pygame.image.load(f"{path_to_img_folder}{id}_hover.png").convert_alpha(),
+        }
 
-		self.method:Optional[MethodType] = method
-		self.arg = arg
+        self.image: pygame.Surface = self.images["idle"]
 
+        self.rect: pygame.Rect = self.image.get_rect()
 
-		if centered:
-			self.rect.center = pos
-		else:
-			self.rect.topleft = pos
+        self.clicked = False
+        self.was_pressed = False
 
+        if centered:
+            self.rect.center = pos
+        else:
+            self.rect.topleft = pos
 
-	def update(self, **kwargs) -> bool: # type:ignore
-		if not self.visible:
-			return False
+    def update(self, **kwargs) -> bool:  # type:ignore
+        print(self.arg)
+        if not self.visible:
+            return False
 
-		self.image = self.images["idle"]
-		if "rel_mouse_pos" in kwargs:
-			mouse_pos = kwargs["rel_mouse_pos"]
-		else:
-			mouse_pos = pygame.mouse.get_pos()
+        self.image = self.images["idle"]
+        if "rel_mouse_pos" in kwargs:
+            mouse_pos = kwargs["rel_mouse_pos"]
+        else:
+            raise RuntimeError(f"error in button: {self.id}: no mouse pos in kwargs")
 
-		mouse_pressed = pygame.mouse.get_pressed()[0]
+        mouse_pressed = pygame.mouse.get_pressed()[0]
 
-		# check if mouse is over button
-		if self.rect.collidepoint(mouse_pos):
-			self.image = self.images["hover"]
+        # check if mouse is over button
+        if self.rect.collidepoint(mouse_pos):
+            self.image = self.images["hover"]
 
-			if mouse_pressed:
-				self.image = self.images["pressed"]
-				self.was_pressed = True
+            if mouse_pressed:
+                self.image = self.images["pressed"]
+                self.was_pressed = True
 
-			elif self.was_pressed: # mouse was pressed but now realeased over the button
-				self.was_pressed = True
-				if self.method:
-					if self.arg:
-						print(self.method, self.arg)
-						self.method(self.arg)
-					else:
-						self.method()
-				return True
-		else:
-			# mouse moved away from button
-			self.was_pressed = False
+            elif self.was_pressed:  # mouse was pressed but now realeased over the button
+                self.was_pressed = True
+                if self.method:
+                    print(self.arg)
+                    if self.arg is not None:
+                        print(self.method, self.arg)
+                        self.method(self.arg)
+                    else:
+                        self.method()
+                return True
+        else:
+            # mouse moved away from button
+            self.was_pressed = False
 
-		return False
+        return False
 
-
-
-	def add_method(self, method, arg=None):
-		self.method = method
-		self.arg = arg
+    def add_method(self, method, arg=None):
+        self.method = method
+        self.arg = arg

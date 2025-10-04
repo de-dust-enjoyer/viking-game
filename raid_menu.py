@@ -12,8 +12,10 @@ class RaidMenu(UiElement):
 
         elements: dict = {
             "close_button": Button("close_button", (435, 13), "assets/sprites/ui/raid_menu/", method=self.hide),
-            "scout_button": Button("scout_button", (13, 225), "assets/sprites/ui/raid_menu/", method=self.player.scout, arg=self.player.raid_target),
-            "attack_button": Button("attack_button", (243, 225), "assets/sprites/ui/raid_menu/"),
+            "scout_button": Button("scout_button", (13, 225), "assets/sprites/ui/raid_menu/", method=lambda: self.player.scout(self.player.raid_target)),
+            "attack_button": Button(
+                "attack_button", (243, 225), "assets/sprites/ui/raid_menu/", method=lambda: parent.game_state_manager.set_level(self.player.raid_target.id)
+            ),
         }
         super().__init__(parent, group, id, pos, background_surf, centered, **elements)
 
@@ -31,3 +33,4 @@ class RaidMenu(UiElement):
             self.parent.camera_group.set_target(self.player.raid_target)
 
         self.update_components(events)
+        print("raid_menu: " + str(self.player.raid_target))

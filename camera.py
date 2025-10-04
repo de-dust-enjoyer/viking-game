@@ -25,13 +25,14 @@ class CameraGroup(pygame.sprite.Group):
         self.zoom_target: float = self.zoom  # used to lerp()
 
         self.sprites_drawn = 0
-
+        print(pygame.math.Vector2(self.display_surf.get_size()))
         self.zoom_center = pygame.math.Vector2(self.display_surf.get_size()) / 2
         self.offset: pygame.math.Vector2 = pygame.math.Vector2(100, 250)
-        self.visible_offset = pygame.math.Vector2 = pygame.math.Vector2(100, 250)
+        self.visible_offset = pygame.math.Vector2(100, 250)
 
         self.velocity = pygame.Vector2(0, 0)
-        self.camera_speed = 10
+        self.box_speed = 10
+        self.keys_speed = 100
         self.dead_zone = 10  # very small number
 
         self.target = None
@@ -60,7 +61,8 @@ class CameraGroup(pygame.sprite.Group):
         if self.type == "follow":
             self.box_movement(dt)
         elif self.type == "mouse":
-            pass  # future mouse controll camera
+            self.mouse_movement(pygame.mouse.get_pos())
+            self.keys_movement(pygame.key.get_pressed(), dt)
         # aduasts the rect to it fits the zoomed screen
         visible_w = w / zoom
         visible_h = h / zoom
@@ -82,9 +84,7 @@ class CameraGroup(pygame.sprite.Group):
             self.sprites_drawn += 1
 
         # rendering  of chunked static objects
-        nearby_static_objects = get_nearby_static_objects(
-            center_pos, self.chunked_static_objects, self.chunk_size, self.render_dist_x + 1, self.render_dist_y + 1
-        )
+        nearby_static_objects = get_nearby_static_objects(center_pos, self.chunked_static_objects, self.chunk_size, self.render_dist_x + 1, self.render_dist_y + 1)
         for sprite in nearby_static_objects:
             sprite_pos = sprite.rect.topleft
             adjusted_pos_x = (sprite_pos[0] - self.visible_offset.x) * zoom
@@ -143,9 +143,47 @@ class CameraGroup(pygame.sprite.Group):
                 self.velocity = pygame.Vector2(0, 0)
 
         # calculat
-        offset_increment = self.velocity * self.camera_speed * dt  # frame independence :)
+        offset_increment = self.velocity * self.box_speed * dt  # frame independence :)
 
         self.offset += offset_increment
+        self.visible_offset.x = round(self.offset.x)
+        self.visible_offset.y = round(self.offset.y)
+
+    def mouse_movement(self, mousePos: tuple):
+        if pygame.mouse.get_pressed()[1]:
+            if not self.dragging:
+                self.dragStartMouse = pygame.math.Vector2(mousePos)
+                self.dragStartOffset = self.offset.copy()
+                self.dragging = True
+            dragDelta = pygame.math.Vector2(mousePos) - self.dragStartMouse  # type: ignore
+            self.offset = self.dragStartOffset - dragDelta / self.zoom
+            self.visible_offset.x = round(self.offset.x)
+            self.visible_offset.y = round(self.offset.y)
+        else:
+            self.dragging = False
+
+    def keys_movement(self, keys: pygame.key.ScancodeWrapper, dt):
+        # changes the direction vector to match player input
+        direction = pygame.Vector2(0, 0)
+        if not keys[pygame.K_w]:
+            direction.y = 0
+        elif not keys[pygame.K_s]:
+            direction.y = 0
+        if not keys[pygame.K_a]:
+            direction.x = 0
+        elif not keys[pygame.K_d]:
+            direction.x = 0
+
+        if keys[pygame.K_w]:
+            direction.y = -1
+        elif keys[pygame.K_s]:
+            direction.y = 1
+        if keys[pygame.K_a]:
+            direction.x = -1
+        elif keys[pygame.K_d]:
+            direction.x = 1
+
+        self.offset += direction * self.keys_speed * dt
         self.visible_offset.x = round(self.offset.x)
         self.visible_offset.y = round(self.offset.y)
 
@@ -164,6 +202,8 @@ class CameraGroup(pygame.sprite.Group):
 
     def set_position(self, position: tuple):
         self.offset.update(position[0] - self.camera_rect.width / 2, position[1] - self.camera_rect.height / 2)
+        self.visible_offset.x = round(self.offset.x)
+        self.visible_offset.y = round(self.offset.y)
 
     def set_zoom(self, new_zoom: float):
         self.zoom_target = new_zoom

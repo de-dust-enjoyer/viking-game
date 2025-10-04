@@ -57,8 +57,8 @@ class Ship(Object):
         # apply velocity vector with speed and dt
         self.position += self.velocity * self.speed * dt
         # apply position to rect and collision rect
-        self.collision_rect.center = self.position
-        self.rect.center = self.collision_rect.center
+        self.rect.topleft = self.position
+        self.collision_rect.center = self.rect.center  # type:ignore
 
         # reset velocity vector
         self.velocity.x = 0

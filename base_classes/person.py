@@ -2,9 +2,11 @@ from constants import *
 import data.names as names
 import data.attributes as attributes
 
-class Person:
-    def __init__(self, type:str, name=None, attr=None):
-        '''name format = (forename, surname), attribute format = {category: {attribute: {stat: value}}}'''
+
+class Person(pygame.sprite.Sprite):
+    def __init__(self, type: str, name=None, attr=None):
+        """name format = (forename, surname), attribute format = {category: {attribute: {stat: value}}}"""
+        super().__init__()
         self.type = type
         if name:
             self.forename, self.surname = name
@@ -26,9 +28,6 @@ class Person:
         self.scouting = self.base_scouting
 
         self.refresh_attr_boni()
-
-    
-
 
     def refresh_attr_boni(self):
         for category in self.attributes:
@@ -60,4 +59,3 @@ class Person:
             return self.health
         else:
             return 0
-

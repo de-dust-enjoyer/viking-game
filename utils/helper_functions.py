@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 
 
 def render_text_with_outline(
@@ -72,3 +72,10 @@ def img_with_outline(image: pygame.Surface, line_thickness: int = 1, color=(255,
     item_img_outline.blit(image)
 
     return item_img_outline
+
+
+def get_random_point_in_area_list(area_list: list) -> tuple:
+    area = random.choice(area_list)
+    random_x = random.randrange(area.left, area.left + area.width)
+    random_y = random.randrange(area.top, area.top + area.height)
+    return random_x, random_y

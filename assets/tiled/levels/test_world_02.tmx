@@ -211,10 +211,10 @@
 </data>
  </layer>
  <objectgroup id="5" name="landing_zones">
-  <object id="8" name="nonono" type="landing_zone" x="740.833" y="485.333" width="216.5" height="222"/>
+  <object id="8" name="test_town" type="landing_zone" x="740.833" y="485.333" width="216.5" height="222"/>
  </objectgroup>
  <objectgroup id="2" name="towns">
-  <object id="6" name="nonono" type="town" gid="1756" x="796" y="645" width="108" height="108">
+  <object id="6" name="test_town" type="town" gid="1756" x="796" y="645" width="108" height="108">
    <properties>
     <property name="army_strength" type="int" value="20"/>
     <property name="loot_value" type="int" value="120"/>
