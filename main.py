@@ -50,6 +50,9 @@ class Game:
                         sys.exit()
                     elif event.key == pygame.K_TAB:
                         self.world.inventory_menu.toggle_visibility()
+                elif event.type == pygame.MOUSEWHEEL:
+                    if self.game_state_manager.get_state()[0] == "level":
+                        self.level.camera_group.zoom += event.y
 
             # run the selected game state
             state, level = self.game_state_manager.get_state()
@@ -58,12 +61,6 @@ class Game:
             self.states[state].run(dt, events)
 
             # debugging osd
-            self.debug_info.add("FPS", round(self.clock.get_fps(), 1))
-            self.debug_info.add("selected_item", self.world.inventory_menu.components["grid_inventory"].selected_item)
-            self.debug_info.add("rotate_selected_item", self.world.inventory_menu.components["grid_inventory"].rotate_selected_item)
-            self.debug_info.add("item_ammount", self.world.inventory_menu.components["grid_inventory"].item_ammount)
-            if self.world.inventory_menu.components["grid_inventory"].selected_item is not None:
-                self.debug_info.add("stack_count", self.world.inventory_menu.components["grid_inventory"].selected_item.stack_count)
 
             # update the display surf
             self.debug_info.render(self.screen)

@@ -88,10 +88,9 @@ def slice_spritesheets_in_folder(folder):
 
 
 def delete_generated_imgs(folder):
+    """DO NOT USE!!! DELETES EVERYTHING!!!"""
     for dir in os.walk(folder):
         for image in dir[2]:
             input_path = dir[0] + "/" + image
+
             os.remove(input_path)
-
-
-delete_generated_imgs("../assets/sprites/units/chest/")

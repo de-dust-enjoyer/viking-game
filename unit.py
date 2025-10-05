@@ -1,6 +1,9 @@
 from constants import *
+from typing import Dict
 from base_classes.person import Person
 from pygame_animation_player import AnimationPlayer, Animation
+from data.unit_appearance import get_random_appearance
+import random
 
 
 class Unit(Person):
@@ -12,35 +15,50 @@ class Unit(Person):
         self.image = None
         self.dead = False
         self.allegiance = allegiance
+        self.tile_size = (64, 64)
+        self.animation_fps = 10
         self.movement_speed = 10
 
-        self.appearance = {"base": "base"}
+        self.appearance = get_random_appearance(allegiance)
 
-        animations_base = {
-            "idle_down": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "idle_down.png")).convert_alpha(), tilesize=(64, 64)),
-            "idle_side": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "idle_side.png")).convert_alpha(), tilesize=(64, 64)),
-            "idle_up": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "idle_up.png")).convert_alpha(), tilesize=(64, 64)),
-            "walk_down": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "walk_down.png")).convert_alpha(), tilesize=(64, 64)),
-            "walk_side": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "walk_side.png")).convert_alpha(), tilesize=(64, 64)),
-            "walk_up": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "walk_up.png")).convert_alpha(), tilesize=(64, 64)),
-            "die": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "die.png")).convert_alpha(), tilesize=(64, 64)),
-            "hit_down": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "hit_down.png")).convert_alpha(), tilesize=(64, 64)),
-            "hit_side": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "hit_side.png")).convert_alpha(), tilesize=(64, 64)),
-            "hit_up": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "hit_up.png")).convert_alpha(), tilesize=(64, 64)),
-            "attack_0_down": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "attack_0_down.png")).convert_alpha(), tilesize=(64, 64)),
-            "attack_1_down": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "attack_1_down.png")).convert_alpha(), tilesize=(64, 64)),
-            "attack_2_down": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "attack_2_down.png")).convert_alpha(), tilesize=(64, 64)),
-            "attack_0_side": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "attack_0_side.png")).convert_alpha(), tilesize=(64, 64)),
-            "attack_1_side": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "attack_1_side.png")).convert_alpha(), tilesize=(64, 64)),
-            "attack_2_side": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "attack_2_side.png")).convert_alpha(), tilesize=(64, 64)),
-            "attack_0_up": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "attack_0_up.png")).convert_alpha(), tilesize=(64, 64)),
-            "attack_1_up": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "attack_1_up.png")).convert_alpha(), tilesize=(64, 64)),
-            "attack_2_up": Animation(10, pygame.image.load(join("assets", "sprites", "units", self.appearance["base"], "attack_2_up.png")).convert_alpha(), tilesize=(64, 64)),
-        }
-        self.animation_player = AnimationPlayer(self, **animations_base)
-        self.animation_player.play("idle_down ")
+        animations = self.get_animations()
+
+        self.animation_player = AnimationPlayer(self, **animations)
+        self.animation_player.play("idle_down")
         self.rect = self.image.get_rect(topleft=starting_pos)
         print(self.rect)
+
+    def get_animations(self) -> dict:
+        image_dict = {}
+        animation_dict = {}
+        render_order = ["feet", "legs", "chest", "head", "accessories", "hands"]
+        animations = [
+            "idle_down",
+            "idle_side",
+            "idle_up",
+            "walk_down",
+            "walk_side",
+            "walk_up",
+            "die",
+            "hit_down",
+            "hit_side",
+            "hit_up",
+            "attack_0_down",
+            "attack_1_down",
+            "attack_2_down",
+            "attack_0_side",
+            "attack_1_side",
+            "attack_2_side",
+            "attack_0_up",
+            "attack_1_up",
+            "attack_2_up",
+        ]
+        for animation in animations:
+            image_dict[animation] = pygame.image.load(join("assets", "sprites", "units", "base", self.appearance["base"], animation + ".png")).convert_alpha()
+            for component in render_order:
+                image_dict[animation].blit(pygame.image.load(join("assets", "sprites", "units", component, self.appearance[component], animation + ".png")).convert_alpha())
+            animation_dict[animation] = Animation(self.animation_fps, image_dict[animation], tilesize=self.tile_size)
+        return animation_dict
 
     def update(self, dt):
         self.animation_player.update(dt)

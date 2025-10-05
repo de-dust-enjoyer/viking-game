@@ -39,9 +39,7 @@ class Level:
         self.animated_tiles = pygame.sprite.Group()
         self.static_objects = pygame.sprite.Group()
 
-        self.camera_group = CameraGroup(
-            self.screen, [self.dynamic_objects], self.chunked_tile_imgs, self.chunked_static_objects, self.chunked_animated_tiles, CHUNK_SIZE, type="mouse"
-        )
+        self.camera_group = CameraGroup(self.screen, [self.dynamic_objects], self.chunked_tile_imgs, self.chunked_static_objects, self.chunked_animated_tiles, CHUNK_SIZE, type="mouse")
         self.ui_group = UiGroup()
 
         self.tile_animation_manager = TileAnimationManager()

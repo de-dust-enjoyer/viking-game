@@ -1,4 +1,6 @@
 import pygame, random
+from typing import Optional
+import os
 
 
 def render_text_with_outline(
@@ -79,3 +81,24 @@ def get_random_point_in_area_list(area_list: list) -> tuple:
     random_x = random.randrange(area.left, area.left + area.width)
     random_y = random.randrange(area.top, area.top + area.height)
     return random_x, random_y
+
+
+def list_from_dir(folder_path: str, includes: Optional[str] = None):
+    folder_list = os.listdir(folder_path)
+    if includes is None:
+        return folder_list
+    filtered_list = []
+    for element in folder_list:
+        if includes in element:
+            filtered_list.append(element)
+
+    return filtered_list
+
+
+def list_from_dir_args(folder_path: str, *args):
+    """*args: strings that the desired items must include (or operation)
+    this function does not keep the order of the folders"""
+    filtered_list = []
+    for arg in args:
+        filtered_list.extend(list_from_dir(folder_path, arg))
+    return list(set(filtered_list))
