@@ -38,7 +38,6 @@ class Button:
             self.rect.topleft = pos
 
     def update(self, **kwargs) -> bool:  # type:ignore
-        print(self.arg)
         if not self.visible:
             return False
 
@@ -61,9 +60,7 @@ class Button:
             elif self.was_pressed:  # mouse was pressed but now realeased over the button
                 self.was_pressed = True
                 if self.method:
-                    print(self.arg)
                     if self.arg is not None:
-                        print(self.method, self.arg)
                         self.method(self.arg)
                     else:
                         self.method()

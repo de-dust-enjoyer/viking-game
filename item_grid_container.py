@@ -79,7 +79,6 @@ class ItemGridContainer:
     def _draw_items(self) -> None:
         for index, item in enumerate(self.clean_item_list):
             x, y = self._calculate_grid_position(index)
-            print(item.id)
             self.grid_surf.blit(item_data[item.id]["image"], (x, y))
             if self.item_count_dict[item.id] > 1:
                 # blit num of items

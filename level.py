@@ -8,6 +8,7 @@ from base_classes.tile import Tile, AnimatedTile, TileAnimationManager
 from grid_inventory import GridInventory
 from ui_group import UiGroup
 from utils.helper_functions import get_random_point_in_area_list
+from harvestable import Harvestable
 from unit import Unit
 import random
 
@@ -142,6 +143,10 @@ class Level:
                 elif layer.name == "npc_roaming_space":
                     for obj in layer:
                         self.npc_roaming_space.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
+
+                elif layer.name == "harvestables":
+                    for obj in layer:
+                        harvestable = Harvestable((obj.x, obj.y), obj.type, layer.name, self.dynamic_objects)
 
         # go throug each tile in chunked tiles and render it onto a surface so that each chunk is only one surface
         for chunk in self.chunked_tiles:

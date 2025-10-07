@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="181">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="332">
  <tileset firstgid="1" source="../tilesets/punyworld-overworld-tiles.tsx"/>
  <tileset firstgid="1756" source="../tilesets/ship.tsx"/>
  <tileset firstgid="1757" source="House_1.tsx"/>
@@ -13,6 +13,7 @@
  <tileset firstgid="1790" source="Medium_Oak_Tree.tsx"/>
  <tileset firstgid="1793" source="Big_Birch_Tree.tsx"/>
  <tileset firstgid="1796" source="Big_Fruit_Tree.tsx"/>
+ <tileset firstgid="1799" source="Big_Spruce_tree.tsx"/>
  <layer id="1" name="ground" width="100" height="100">
   <data encoding="csv">
 55,3,57,30,2,30,55,1,57,55,57,55,29,2,2,55,28,1,55,1,2,29,55,57,28,1,55,1,3,56,2,57,1,30,1,30,3,57,30,1,29,29,29,30,1,55,2,3,3,30,3,29,57,55,29,56,1,28,1,30,30,30,3,29,55,56,57,55,56,55,57,3,57,57,56,3,1,1,3,2,30,29,30,3,57,57,29,29,30,28,28,30,55,28,57,3,56,1,30,30,
@@ -117,150 +118,6 @@
 321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,297,294,294,294,294,294,294,294,296,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321,321
 </data>
  </layer>
- <objectgroup id="7" name="trees">
-  <object id="31" gid="1788" x="1124" y="1046" width="64" height="80"/>
-  <object id="33" gid="1788" x="1066.67" y="1038" width="64" height="80"/>
-  <object id="34" gid="1787" x="1028" y="1087.33" width="64" height="80"/>
-  <object id="35" gid="1787" x="990.667" y="1068" width="64" height="80"/>
-  <object id="36" gid="1787" x="923.333" y="1057.33" width="64" height="80"/>
-  <object id="37" gid="1787" x="918.667" y="997.333" width="64" height="80"/>
-  <object id="38" gid="1787" x="982.667" y="1000" width="64" height="80"/>
-  <object id="39" gid="1787" x="1033.33" y="958" width="64" height="80"/>
-  <object id="40" gid="1787" x="1164" y="1044" width="64" height="80"/>
-  <object id="41" gid="1787" x="1081.33" y="1086.67" width="64" height="80"/>
-  <object id="42" gid="1787" x="945.333" y="974" width="64" height="80"/>
-  <object id="43" gid="1787" x="892" y="939.333" width="64" height="80"/>
-  <object id="44" gid="1787" x="968.667" y="910" width="64" height="80"/>
-  <object id="45" gid="1787" x="920" y="854" width="64" height="80"/>
-  <object id="46" gid="1787" x="856.667" y="894.667" width="64" height="80"/>
-  <object id="47" gid="1788" x="992" y="947.333" width="64" height="80"/>
-  <object id="48" gid="1788" x="1082.67" y="928" width="64" height="80"/>
-  <object id="49" gid="1788" x="1166.67" y="949.333" width="64" height="80"/>
-  <object id="53" gid="1788" x="1138" y="995.333" width="64" height="80"/>
-  <object id="56" gid="1788" x="1054" y="898.667" width="64" height="80"/>
-  <object id="59" gid="1788" x="1212.67" y="920" width="64" height="80"/>
-  <object id="60" gid="1788" x="1166" y="868.667" width="64" height="80"/>
-  <object id="61" gid="1791" x="990" y="840" width="32" height="48"/>
-  <object id="62" gid="1791" x="976.667" y="797.333" width="32" height="48"/>
-  <object id="63" gid="1791" x="1088" y="833.333" width="32" height="48"/>
-  <object id="64" gid="1791" x="1150" y="892.667" width="32" height="48"/>
-  <object id="65" gid="1791" x="1070" y="764" width="32" height="48"/>
-  <object id="66" gid="1791" x="1210.67" y="760.667" width="32" height="48"/>
-  <object id="67" gid="1791" x="1312" y="702.667" width="32" height="48"/>
-  <object id="68" gid="1791" x="1413.33" y="693.333" width="32" height="48"/>
-  <object id="69" gid="1788" x="1390.67" y="595.333" width="64" height="80"/>
-  <object id="70" gid="1788" x="1246.67" y="507.333" width="64" height="80"/>
-  <object id="71" gid="1788" x="1290" y="618" width="64" height="80"/>
-  <object id="72" gid="1788" x="1480.67" y="656.667" width="64" height="80"/>
-  <object id="73" gid="1788" x="1281.33" y="818.667" width="64" height="80"/>
-  <object id="74" gid="1788" x="1229.33" y="678.667" width="64" height="80"/>
-  <object id="75" gid="1788" x="1162.67" y="506.667" width="64" height="80"/>
-  <object id="76" gid="1788" x="1408" y="493.333" width="64" height="80"/>
-  <object id="77" gid="1788" x="626.667" y="1030.67" width="64" height="80"/>
-  <object id="78" gid="1788" x="668" y="953.333" width="64" height="80"/>
-  <object id="79" gid="1788" x="632" y="857.333" width="64" height="80"/>
-  <object id="80" gid="1788" x="496" y="778.667" width="64" height="80"/>
-  <object id="81" gid="1788" x="448" y="677.333" width="64" height="80"/>
-  <object id="82" gid="1788" x="554.667" y="621.333" width="64" height="80"/>
-  <object id="83" gid="1788" x="510.667" y="565.333" width="64" height="80"/>
-  <object id="84" gid="1788" x="386.667" y="501.333" width="64" height="80"/>
-  <object id="85" gid="1788" x="460" y="425.333" width="64" height="80"/>
-  <object id="86" gid="1788" x="558.667" y="412" width="64" height="80"/>
-  <object id="87" gid="1788" x="642.667" y="370.667" width="64" height="80"/>
-  <object id="88" gid="1788" x="738.667" y="321.333" width="64" height="80"/>
-  <object id="89" gid="1788" x="829.333" y="276" width="64" height="80"/>
-  <object id="90" gid="1788" x="524" y="256" width="64" height="80"/>
-  <object id="91" gid="1788" x="298.667" y="198.667" width="64" height="80"/>
-  <object id="92" gid="1788" x="101.333" y="362.667" width="64" height="80"/>
-  <object id="93" gid="1788" x="181.333" y="565.333" width="64" height="80"/>
-  <object id="94" gid="1788" x="125.333" y="749.333" width="64" height="80"/>
-  <object id="95" gid="1788" x="258.667" y="745.333" width="64" height="80"/>
-  <object id="96" gid="1788" x="169.333" y="994.667" width="64" height="80"/>
-  <object id="97" gid="1788" x="5.33333" y="1005.33" width="64" height="80"/>
-  <object id="98" gid="1788" x="185.333" y="833.333" width="64" height="80"/>
-  <object id="99" gid="1788" x="65.3333" y="557.333" width="64" height="80"/>
-  <object id="100" gid="1788" x="181.333" y="398.667" width="64" height="80"/>
-  <object id="101" gid="1788" x="69.3333" y="204" width="64" height="80"/>
-  <object id="102" gid="1788" x="432" y="181.333" width="64" height="80"/>
-  <object id="103" gid="1788" x="321.333" y="326.667" width="64" height="80"/>
-  <object id="104" gid="1788" x="674.667" y="141.333" width="64" height="80"/>
-  <object id="105" gid="1788" x="1036" y="190.667" width="64" height="80"/>
-  <object id="106" gid="1788" x="1294.67" y="237.333" width="64" height="80"/>
-  <object id="107" gid="1788" x="1324" y="357.333" width="64" height="80"/>
-  <object id="108" gid="1788" x="1189.33" y="405.333" width="64" height="80"/>
-  <object id="109" gid="1788" x="1521.33" y="373.333" width="64" height="80"/>
-  <object id="110" gid="1788" x="1481.33" y="197.333" width="64" height="80"/>
-  <object id="111" gid="1788" x="1350.67" y="140" width="64" height="80"/>
-  <object id="112" gid="1788" x="1212" y="98.6667" width="64" height="80"/>
-  <object id="113" gid="1788" x="1201.33" y="258.667" width="64" height="80"/>
-  <object id="114" gid="1788" x="342" y="894" width="64" height="80"/>
-  <object id="115" gid="1788" x="276" y="922" width="64" height="80"/>
-  <object id="116" gid="1788" x="394" y="726" width="64" height="80"/>
-  <object id="117" gid="1788" x="336" y="572" width="64" height="80"/>
-  <object id="118" gid="1788" x="196" y="626" width="64" height="80"/>
-  <object id="119" gid="1788" x="254" y="498" width="64" height="80"/>
-  <object id="120" gid="1788" x="128" y="446" width="64" height="80"/>
-  <object id="121" gid="1788" x="152" y="338" width="64" height="80"/>
-  <object id="122" gid="1788" x="82" y="246" width="64" height="80"/>
-  <object id="123" gid="1788" x="244" y="198" width="64" height="80"/>
-  <object id="124" gid="1788" x="206" y="128" width="64" height="80"/>
-  <object id="125" gid="1788" x="206" y="128" width="64" height="80"/>
-  <object id="126" gid="1794" x="1103" y="971.5" width="32" height="80"/>
-  <object id="127" gid="1794" x="1122.5" y="850.5" width="32" height="80"/>
-  <object id="128" gid="1794" x="1169.5" y="805" width="32" height="80"/>
-  <object id="129" gid="1794" x="1267" y="757.5" width="32" height="80"/>
-  <object id="130" gid="1794" x="1365.5" y="667" width="32" height="80"/>
-  <object id="131" gid="1794" x="1233" y="560" width="32" height="80"/>
-  <object id="132" gid="1794" x="1244" y="322" width="32" height="80"/>
-  <object id="133" gid="1794" x="889" y="208" width="32" height="80"/>
-  <object id="134" gid="1794" x="768" y="398" width="32" height="80"/>
-  <object id="135" gid="1794" x="506" y="356" width="32" height="80"/>
-  <object id="136" gid="1794" x="358" y="432" width="32" height="80"/>
-  <object id="137" gid="1794" x="427" y="602" width="32" height="80"/>
-  <object id="138" gid="1794" x="327" y="699" width="32" height="80"/>
-  <object id="139" gid="1794" x="195" y="663" width="32" height="80"/>
-  <object id="140" gid="1794" x="68" y="680" width="32" height="80"/>
-  <object id="141" gid="1794" x="184" y="471" width="32" height="80"/>
-  <object id="142" gid="1794" x="246" y="297" width="32" height="80"/>
-  <object id="143" gid="1794" x="150" y="180" width="32" height="80"/>
-  <object id="144" gid="1794" x="519.333" y="860" width="32" height="80"/>
-  <object id="145" gid="1794" x="369.333" y="798" width="32" height="80"/>
-  <object id="146" gid="1794" x="251.333" y="857.333" width="32" height="80"/>
-  <object id="147" gid="1794" x="276" y="626.667" width="32" height="80"/>
-  <object id="148" gid="1794" x="414.667" y="260" width="32" height="80"/>
-  <object id="149" gid="1794" x="642.667" y="225.333" width="32" height="80"/>
-  <object id="150" gid="1794" x="1406.67" y="281.333" width="32" height="80"/>
-  <object id="151" gid="1794" x="1273.33" y="173.333" width="32" height="80"/>
-  <object id="152" gid="1794" x="1489.33" y="104" width="32" height="80"/>
-  <object id="153" gid="1794" x="1434.67" y="397.333" width="32" height="80"/>
-  <object id="154" gid="1794" x="1313.33" y="445.333" width="32" height="80"/>
-  <object id="155" gid="1794" x="1526.67" y="545.333" width="32" height="80"/>
-  <object id="156" gid="1797" x="1148.5" y="733.5" width="32" height="64"/>
-  <object id="157" gid="1797" x="1023" y="829.5" width="32" height="64"/>
-  <object id="158" gid="1797" x="1213" y="811" width="32" height="64"/>
-  <object id="159" gid="1797" x="1033.5" y="1038" width="32" height="64"/>
-  <object id="160" gid="1797" x="1214" y="985.5" width="32" height="64"/>
-  <object id="161" gid="1797" x="1290" y="885.5" width="32" height="64"/>
-  <object id="162" gid="1797" x="1244" y="843.5" width="32" height="64"/>
-  <object id="163" gid="1797" x="1341" y="759.5" width="32" height="64"/>
-  <object id="164" gid="1797" x="1301.5" y="664.5" width="32" height="64"/>
-  <object id="165" gid="1797" x="1422.5" y="644" width="32" height="64"/>
-  <object id="166" gid="1797" x="1480" y="704" width="32" height="64"/>
-  <object id="167" gid="1797" x="1303" y="542" width="32" height="64"/>
-  <object id="168" gid="1797" x="451" y="504" width="32" height="64"/>
-  <object id="169" gid="1797" x="480" y="602" width="32" height="64"/>
-  <object id="170" gid="1797" x="404" y="656" width="32" height="64"/>
-  <object id="171" gid="1797" x="234" y="694" width="32" height="64"/>
-  <object id="172" gid="1797" x="419" y="805" width="32" height="64"/>
-  <object id="173" gid="1797" x="784" y="1057" width="32" height="64"/>
-  <object id="174" gid="1797" x="696.333" y="877" width="32" height="64"/>
-  <object id="175" gid="1797" x="690.667" y="782.333" width="32" height="64"/>
-  <object id="176" gid="1797" x="842.333" y="731.667" width="32" height="64"/>
-  <object id="177" gid="1797" x="943" y="498" width="32" height="64"/>
-  <object id="178" gid="1797" x="1021" y="433" width="32" height="64"/>
-  <object id="179" gid="1797" x="1134" y="446" width="32" height="64"/>
-  <object id="180" gid="1797" x="1058" y="533" width="32" height="64"/>
- </objectgroup>
  <objectgroup id="5" name="npc_roaming_space">
   <object id="20" x="848" y="313.333" width="322.667" height="229.333"/>
   <object id="21" x="554.667" y="481.333" width="330.667" height="29.3333"/>
@@ -271,7 +128,7 @@
   <object id="26" x="513.333" y="1050.67" width="136" height="101.333"/>
   <object id="28" x="752" y="1107.33" width="57.3333" height="284.667"/>
   <object id="29" x="1055.33" y="1188" width="141.333" height="82"/>
-  <object id="30" x="900" y="957.333" width="269.333" height="108"/>
+  <object id="30" x="938" y="986.333" width="269.333" height="108"/>
  </objectgroup>
  <objectgroup id="4" name="houses">
   <object id="6" gid="1757" x="624" y="496" width="80" height="112"/>
@@ -396,4 +253,135 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="8" name="harvestables">
+  <object id="202" type="big_birch_tree" gid="1794" x="980.667" y="804.667" width="32" height="80"/>
+  <object id="203" type="big_birch_tree" gid="1794" x="895.333" y="894.667" width="32" height="80"/>
+  <object id="205" type="big_birch_tree" gid="1794" x="1052" y="863.333" width="32" height="80"/>
+  <object id="206" type="big_birch_tree" gid="1794" x="966" y="954" width="32" height="80"/>
+  <object id="207" type="big_birch_tree" gid="1794" x="1138" y="956" width="32" height="80"/>
+  <object id="208" type="big_birch_tree" gid="1794" x="1186" y="816.667" width="32" height="80"/>
+  <object id="209" type="big_birch_tree" gid="1794" x="1302.67" y="673.333" width="32" height="80"/>
+  <object id="210" type="big_birch_tree" gid="1794" x="1388" y="679.333" width="32" height="80"/>
+  <object id="211" type="big_birch_tree" gid="1794" x="1215.33" y="538.667" width="32" height="80"/>
+  <object id="212" type="big_birch_tree" gid="1794" x="1223.33" y="339.333" width="32" height="80"/>
+  <object id="213" type="big_birch_tree" gid="1794" x="945.333" y="510" width="32" height="80"/>
+  <object id="214" type="big_birch_tree" gid="1794" x="1069.33" y="456" width="32" height="80"/>
+  <object id="215" type="big_birch_tree" gid="1794" x="656.667" y="248" width="32" height="80"/>
+  <object id="216" type="big_birch_tree" gid="1794" x="567.333" y="291.333" width="32" height="80"/>
+  <object id="217" type="big_birch_tree" gid="1794" x="488" y="352.667" width="32" height="80"/>
+  <object id="218" type="big_birch_tree" gid="1794" x="572" y="408" width="32" height="80"/>
+  <object id="219" type="big_birch_tree" gid="1794" x="698.667" y="362.667" width="32" height="80"/>
+  <object id="220" type="big_birch_tree" gid="1794" x="675.333" y="612.667" width="32" height="80"/>
+  <object id="221" type="big_birch_tree" gid="1794" x="554.667" y="591.333" width="32" height="80"/>
+  <object id="222" type="big_birch_tree" gid="1794" x="569.333" y="674.667" width="32" height="80"/>
+  <object id="223" type="big_birch_tree" gid="1794" x="662" y="855.333" width="32" height="80"/>
+  <object id="224" type="big_birch_tree" gid="1794" x="512.667" y="801.333" width="32" height="80"/>
+  <object id="225" type="big_birch_tree" gid="1794" x="434.667" y="728.667" width="32" height="80"/>
+  <object id="226" type="big_birch_tree" gid="1794" x="631.333" y="1034" width="32" height="80"/>
+  <object id="227" type="big_birch_tree" gid="1794" x="993.333" y="1128.67" width="32" height="80"/>
+  <object id="228" type="big_birch_tree" gid="1794" x="1214.67" y="1288.67" width="32" height="80"/>
+  <object id="229" type="big_fruit_tree" gid="1797" x="912" y="812.667" width="32" height="64"/>
+  <object id="230" type="big_fruit_tree" gid="1797" x="1005.33" y="900" width="32" height="64"/>
+  <object id="231" type="big_fruit_tree" gid="1797" x="861.333" y="940" width="32" height="64"/>
+  <object id="232" type="big_fruit_tree" gid="1797" x="956.667" y="864" width="32" height="64"/>
+  <object id="233" type="big_fruit_tree" gid="1797" x="807.333" y="899.333" width="32" height="64"/>
+  <object id="234" type="big_fruit_tree" gid="1797" x="916.667" y="1002.67" width="32" height="64"/>
+  <object id="235" type="big_fruit_tree" gid="1797" x="1056" y="1010.67" width="32" height="64"/>
+  <object id="236" type="big_fruit_tree" gid="1797" x="1105.33" y="918.667" width="32" height="64"/>
+  <object id="237" type="big_fruit_tree" gid="1797" x="1088" y="811.333" width="32" height="64"/>
+  <object id="238" type="big_fruit_tree" gid="1797" x="1221.33" y="960" width="32" height="64"/>
+  <object id="239" type="big_fruit_tree" gid="1797" x="1253.33" y="875.333" width="32" height="64"/>
+  <object id="240" type="big_fruit_tree" gid="1797" x="653.333" y="936.667" width="32" height="64"/>
+  <object id="241" type="big_fruit_tree" gid="1797" x="598.667" y="854.667" width="32" height="64"/>
+  <object id="242" type="big_fruit_tree" gid="1797" x="526" y="711.333" width="32" height="64"/>
+  <object id="243" type="big_fruit_tree" gid="1797" x="613.333" y="627.333" width="32" height="64"/>
+  <object id="244" type="big_fruit_tree" gid="1797" x="446" y="643.333" width="32" height="64"/>
+  <object id="245" type="big_fruit_tree" gid="1797" x="442" y="550" width="32" height="64"/>
+  <object id="246" type="big_fruit_tree" gid="1797" x="469.333" y="462" width="32" height="64"/>
+  <object id="247" type="big_fruit_tree" gid="1797" x="504.667" y="404.667" width="32" height="64"/>
+  <object id="248" type="big_fruit_tree" gid="1797" x="554" y="346" width="32" height="64"/>
+  <object id="249" type="big_fruit_tree" gid="1797" x="610" y="362" width="32" height="64"/>
+  <object id="250" type="big_fruit_tree" gid="1797" x="672.667" y="396" width="32" height="64"/>
+  <object id="251" type="big_fruit_tree" gid="1797" x="860.667" y="366" width="32" height="64"/>
+  <object id="252" type="big_fruit_tree" gid="1797" x="779.333" y="388" width="32" height="64"/>
+  <object id="253" type="big_fruit_tree" gid="1797" x="1014.67" y="462.667" width="32" height="64"/>
+  <object id="254" type="big_fruit_tree" gid="1797" x="1172.67" y="445.333" width="32" height="64"/>
+  <object id="255" type="big_fruit_tree" gid="1797" x="1100.67" y="548" width="32" height="64"/>
+  <object id="256" type="big_fruit_tree" gid="1797" x="1241.33" y="414.667" width="32" height="64"/>
+  <object id="257" type="big_fruit_tree" gid="1797" x="1242.67" y="626.667" width="32" height="64"/>
+  <object id="258" type="big_fruit_tree" gid="1797" x="1302.67" y="493.333" width="32" height="64"/>
+  <object id="259" type="big_fruit_tree" gid="1797" x="1336.67" y="350.667" width="32" height="64"/>
+  <object id="260" type="big_fruit_tree" gid="1797" x="1466" y="503.333" width="32" height="64"/>
+  <object id="261" type="big_oak_tree" gid="1788" x="1237.33" y="766.667" width="64" height="80"/>
+  <object id="262" type="big_oak_tree" gid="1788" x="1023.33" y="761.333" width="64" height="80"/>
+  <object id="263" type="big_oak_tree" gid="1788" x="986" y="853.333" width="64" height="80"/>
+  <object id="264" type="big_oak_tree" gid="1788" x="904.667" y="930" width="64" height="80"/>
+  <object id="265" type="big_oak_tree" gid="1788" x="996" y="984" width="64" height="80"/>
+  <object id="266" type="big_oak_tree" gid="1788" x="1043.33" y="925.333" width="64" height="80"/>
+  <object id="267" type="big_oak_tree" gid="1788" x="1114" y="872.667" width="64" height="80"/>
+  <object id="268" type="big_oak_tree" gid="1788" x="1164.67" y="1001.33" width="64" height="80"/>
+  <object id="269" type="big_oak_tree" gid="1788" x="802.667" y="1000" width="64" height="80"/>
+  <object id="270" type="big_oak_tree" gid="1788" x="960" y="1065.33" width="64" height="80"/>
+  <object id="271" type="big_oak_tree" gid="1788" x="1106.67" y="1330" width="64" height="80"/>
+  <object id="272" type="big_oak_tree" gid="1788" x="452" y="1240" width="64" height="80"/>
+  <object id="273" type="big_oak_tree" gid="1788" x="599.333" y="1086" width="64" height="80"/>
+  <object id="274" type="big_oak_tree" gid="1788" x="607.333" y="892" width="64" height="80"/>
+  <object id="275" type="big_oak_tree" gid="1788" x="486.667" y="870.667" width="64" height="80"/>
+  <object id="276" type="big_oak_tree" gid="1788" x="426.667" y="778.667" width="64" height="80"/>
+  <object id="277" type="big_oak_tree" gid="1788" x="483.333" y="661.333" width="64" height="80"/>
+  <object id="278" type="big_oak_tree" gid="1788" x="470.667" y="581.333" width="64" height="80"/>
+  <object id="279" type="big_oak_tree" gid="1788" x="388" y="486" width="64" height="80"/>
+  <object id="280" type="big_oak_tree" gid="1788" x="399.333" y="398.667" width="64" height="80"/>
+  <object id="281" type="big_oak_tree" gid="1788" x="610" y="409.333" width="64" height="80"/>
+  <object id="282" type="big_oak_tree" gid="1788" x="622" y="297.333" width="64" height="80"/>
+  <object id="283" type="big_oak_tree" gid="1788" x="743.333" y="308.667" width="64" height="80"/>
+  <object id="284" type="big_oak_tree" gid="1788" x="816" y="288.667" width="64" height="80"/>
+  <object id="285" type="big_oak_tree" gid="1788" x="1114.67" y="422" width="64" height="80"/>
+  <object id="286" type="big_oak_tree" gid="1788" x="1012" y="538" width="64" height="80"/>
+  <object id="287" type="big_oak_tree" gid="1788" x="1274" y="574.667" width="64" height="80"/>
+  <object id="288" type="big_oak_tree" gid="1788" x="1448" y="648" width="64" height="80"/>
+  <object id="289" type="big_oak_tree" gid="1788" x="1339.33" y="459.333" width="64" height="80"/>
+  <object id="290" type="big_oak_tree" gid="1788" x="1463.33" y="457.333" width="64" height="80"/>
+  <object id="291" type="big_oak_tree" gid="1788" x="1394" y="332.667" width="64" height="80"/>
+  <object id="292" type="big_oak_tree" gid="1788" x="1253.33" y="299.333" width="64" height="80"/>
+  <object id="293" type="big_oak_tree" gid="1788" x="1190" y="214" width="64" height="80"/>
+  <object id="294" type="big_oak_tree" gid="1788" x="1316.67" y="260" width="64" height="80"/>
+  <object id="295" type="big_oak_tree" gid="1788" x="1409.33" y="242" width="64" height="80"/>
+  <object id="296" type="big_oak_tree" gid="1788" x="1070.67" y="181.333" width="64" height="80"/>
+  <object id="297" type="big_oak_tree" gid="1788" x="778" y="464.667" width="64" height="80"/>
+  <object id="298" type="big_spruce_tree" gid="1800" x="403" y="879" width="64" height="80"/>
+  <object id="299" type="big_spruce_tree" gid="1800" x="545" y="812" width="64" height="80"/>
+  <object id="300" type="big_spruce_tree" gid="1800" x="381" y="548" width="64" height="80"/>
+  <object id="301" type="big_spruce_tree" gid="1800" x="514" y="379" width="64" height="80"/>
+  <object id="302" type="big_spruce_tree" gid="1800" x="703" y="252" width="64" height="80"/>
+  <object id="303" type="big_spruce_tree" gid="1800" x="871" y="244" width="64" height="80"/>
+  <object id="304" type="big_spruce_tree" gid="1800" x="1139" y="215" width="64" height="80"/>
+  <object id="305" type="big_spruce_tree" gid="1800" x="1514" y="332" width="64" height="80"/>
+  <object id="306" type="big_spruce_tree" gid="1800" x="1441" y="379" width="64" height="80"/>
+  <object id="307" type="big_spruce_tree" gid="1800" x="1356" y="590" width="64" height="80"/>
+  <object id="308" type="big_spruce_tree" gid="1800" x="1309" y="732" width="64" height="80"/>
+  <object id="309" type="big_spruce_tree" gid="1800" x="1325" y="647" width="64" height="80"/>
+  <object id="310" type="big_spruce_tree" gid="1800" x="1111" y="778" width="64" height="80"/>
+  <object id="311" type="big_spruce_tree" gid="1800" x="1086" y="995" width="64" height="80"/>
+  <object id="312" type="big_spruce_tree" gid="1800" x="1061" y="1084" width="64" height="80"/>
+  <object id="313" type="big_spruce_tree" gid="1800" x="1262" y="1301" width="64" height="80"/>
+  <object id="314" type="big_spruce_tree" gid="1800" x="374" y="740" width="64" height="80"/>
+  <object id="315" type="big_spruce_tree" gid="1800" x="325" y="464" width="64" height="80"/>
+  <object id="316" type="big_spruce_tree" gid="1800" x="405" y="338" width="64" height="80"/>
+  <object id="317" type="big_spruce_tree" gid="1800" x="589" y="142" width="64" height="80"/>
+  <object id="318" type="big_spruce_tree" gid="1800" x="716" y="94" width="64" height="80"/>
+  <object id="319" type="big_spruce_tree" gid="1800" x="968" y="165" width="64" height="80"/>
+  <object id="320" type="big_spruce_tree" gid="1800" x="1220" y="38" width="64" height="80"/>
+  <object id="321" type="big_spruce_tree" gid="1800" x="1331" y="148" width="64" height="80"/>
+  <object id="322" type="big_spruce_tree" gid="1800" x="1024" y="85" width="64" height="80"/>
+  <object id="323" type="big_spruce_tree" gid="1800" x="1224" y="508" width="64" height="80"/>
+  <object id="324" type="big_spruce_tree" gid="1800" x="1269" y="345" width="64" height="80"/>
+  <object id="325" type="big_spruce_tree" gid="1800" x="962" y="481" width="64" height="80"/>
+  <object id="326" type="big_spruce_tree" gid="1800" x="336" y="879" width="64" height="80"/>
+  <object id="327" type="big_spruce_tree" gid="1800" x="120" y="938" width="64" height="80"/>
+  <object id="328" type="big_spruce_tree" gid="1800" x="155" y="669" width="64" height="80"/>
+  <object id="329" type="big_spruce_tree" gid="1800" x="183" y="402" width="64" height="80"/>
+  <object id="330" type="big_spruce_tree" gid="1800" x="223" y="156" width="64" height="80"/>
+  <object id="331" type="big_spruce_tree" gid="1800" x="434" y="155" width="64" height="80"/>
+ </objectgroup>
 </map>

@@ -65,6 +65,3 @@ def get_random_appearance(type: str) -> dict:
         "legs": random.choice(possible_appearances[type]["legs"]),
     }
     return appearance
-
-
-print(get_random_appearance("civilian"))

@@ -25,7 +25,6 @@ class CameraGroup(pygame.sprite.Group):
         self.zoom_target: float = self.zoom  # used to lerp()
 
         self.sprites_drawn = 0
-        print(pygame.math.Vector2(self.display_surf.get_size()))
         self.zoom_center = pygame.math.Vector2(self.display_surf.get_size()) / 2
         self.offset: pygame.math.Vector2 = pygame.math.Vector2(100, 250)
         self.visible_offset = pygame.math.Vector2(100, 250)

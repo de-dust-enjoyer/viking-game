@@ -16,7 +16,7 @@ class UiElement(pygame.sprite.Sprite):
             self.rect: pygame.Rect = self.image.get_rect(topleft=pos)
         self.components = kwargs
 
-        self.visible = True
+        self.visible = False
 
     def update(self, dt, events):
         self.update_components(events)

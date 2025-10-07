@@ -227,8 +227,6 @@ class GridInventory:
                 # if the item was rotated reset rotation
                 item.rotate()
 
-            print(self.place_item(item_to_place, item_origin.x, item_origin.y))
-
         return True
 
     def get_item_at(self, x: int, y: int) -> Optional[Item]:
@@ -413,19 +411,11 @@ class GridInventoryViewport:
                 (line * self.tilesize + 1, self.grid_y * self.tilesize - self.offset_y),
                 self.seperator_line,
             )
-            pygame.draw.line(
-                self.image, self.line_color, (line * self.tilesize, 0 - self.offset_y), (line * self.tilesize, self.grid_y * self.tilesize - self.offset_y), self.seperator_line
-            )
+            pygame.draw.line(self.image, self.line_color, (line * self.tilesize, 0 - self.offset_y), (line * self.tilesize, self.grid_y * self.tilesize - self.offset_y), self.seperator_line)
         for line in range(self.grid_y + 1):
-            pygame.draw.line(
-                self.image, self.line_color2, (0, line * self.tilesize - 1 - self.offset_y), (self.rect.width, line * self.tilesize - 1 - self.offset_y), self.seperator_line
-            )
-            pygame.draw.line(
-                self.image, self.line_color2, (0, line * self.tilesize + 1 - self.offset_y), (self.rect.width, line * self.tilesize + 1 - self.offset_y), self.seperator_line
-            )
-            pygame.draw.line(
-                self.image, self.line_color, (0, line * self.tilesize - self.offset_y), (self.rect.width, line * self.tilesize - self.offset_y), self.seperator_line
-            )
+            pygame.draw.line(self.image, self.line_color2, (0, line * self.tilesize - 1 - self.offset_y), (self.rect.width, line * self.tilesize - 1 - self.offset_y), self.seperator_line)
+            pygame.draw.line(self.image, self.line_color2, (0, line * self.tilesize + 1 - self.offset_y), (self.rect.width, line * self.tilesize + 1 - self.offset_y), self.seperator_line)
+            pygame.draw.line(self.image, self.line_color, (0, line * self.tilesize - self.offset_y), (self.rect.width, line * self.tilesize - self.offset_y), self.seperator_line)
 
     def draw_selected_item_at_cursor(self, rel_mouse_pos: tuple):
         """draws the item contained in the self.item_selected var at the curser with an offset

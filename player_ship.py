@@ -34,7 +34,6 @@ class PlayerShip(Ship):
         self._apply_player_input()  # updates the velocity vector according to input
         self.move(dt)  # applies the velocity vector
         self._check_if_can_raid()
-        print("player: ", str(self.raid_target))
 
     def _apply_player_input(self):
         keys = pygame.key.get_pressed()

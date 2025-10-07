@@ -3,7 +3,7 @@ from typing import Dict
 from base_classes.person import Person
 from pygame_animation_player import AnimationPlayer, Animation
 from data.unit_appearance import get_random_appearance
-import random
+import random, math
 
 
 class Unit(Person):
@@ -11,13 +11,13 @@ class Unit(Person):
         """name format = (forename, surname), attribute format = {category: {attribute: {stat: value}}}"""
         super().__init__(type, name, attr)
         group.add(self)
-        self.print_info()
         self.image = None
         self.dead = False
         self.allegiance = allegiance
         self.tile_size = (64, 64)
         self.animation_fps = 10
         self.movement_speed = 10
+        self.direction = pygame.Vector2(0, 0)
 
         self.appearance = get_random_appearance(allegiance)
 
@@ -26,7 +26,6 @@ class Unit(Person):
         self.animation_player = AnimationPlayer(self, **animations)
         self.animation_player.play("idle_down")
         self.rect = self.image.get_rect(topleft=starting_pos)
-        print(self.rect)
 
     def get_animations(self) -> dict:
         image_dict = {}
@@ -60,8 +59,25 @@ class Unit(Person):
             animation_dict[animation] = Animation(self.animation_fps, image_dict[animation], tilesize=self.tile_size)
         return animation_dict
 
+    def move(self, dt):
+        if self.direction.length() > 1:
+            self.direction = self.direction.normalize()
+        self.rect.topleft += self.direction * self.movement_speed * dt
+
     def update(self, dt):
         self.animation_player.update(dt)
 
     def scale_by(self, scale: float):
         return pygame.transform.scale_by(self.image, scale)
+
+    def distance_to(self, x: float, y: float):
+        return math.sqrt(abs(self.rect.centerx - x + self.rect.centery - y))
+
+    def move_to_point(self, x, y, tolerance=10):
+        dx = x - self.rect.centerx
+        dy = y - self.rect.centery
+        self.direction.update(dx, dy)
+        if abs(dx) <= tolerance and abs(dy) <= tolerance:
+            return True
+
+        return False
