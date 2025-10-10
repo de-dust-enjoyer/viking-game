@@ -40,6 +40,11 @@ class Level:
         self.animated_tiles = pygame.sprite.Group()
         self.static_objects = pygame.sprite.Group()
 
+        self.units = pygame.sprite.Group()
+        self.harvestables = pygame.sprite.Group()
+        self.items = pygame.sprite.Group()
+        self.buildings = pygame.sprite.Group()
+
         self.camera_group = CameraGroup(self.screen, [self.dynamic_objects], self.chunked_tile_imgs, self.chunked_static_objects, self.chunked_animated_tiles, CHUNK_SIZE, type="mouse")
         self.ui_group = UiGroup()
 
@@ -56,8 +61,14 @@ class Level:
 
         # logic
 
-        for obj in self.dynamic_objects:
-            obj.update(dt)
+        for building in self.buildings:
+            building.update(dt)
+        for item in self.items:
+            item.update(dt)
+        for harvestable in self.harvestables:
+            harvestable.update(dt)
+        for unit in self.units:
+            unit.update(self.units.sprites(), self.harvestables.sprites(), self.items.sprites(), dt)
 
         self.tile_animation_manager.update()
 
@@ -138,7 +149,8 @@ class Level:
                         house_img = tmx_data.get_tile_image_by_gid(obj.gid)
                         house = Building(house_img, (obj.x, obj.y), obj.name, layer.name, self.dynamic_objects)
                         for i in range(random.randint(1, 2)):
-                            villager = Unit("english", "civilian", get_random_point_in_area_list(self.npc_roaming_space), self.dynamic_objects)
+                            villager = Unit("english", "civilian", get_random_point_in_area_list(self.npc_roaming_space), self.dynamic_objects, self.npc_roaming_space)
+                            self.units.add(villager)
 
                 elif layer.name == "npc_roaming_space":
                     for obj in layer:
@@ -146,7 +158,8 @@ class Level:
 
                 elif layer.name == "harvestables":
                     for obj in layer:
-                        harvestable = Harvestable((obj.x, obj.y), obj.type, layer.name, self.dynamic_objects)
+                        harvestable = Harvestable((obj.x, obj.y), obj.type, layer.name, self.dynamic_objects, self.items)
+                        self.harvestables.add(harvestable)
 
         # go throug each tile in chunked tiles and render it onto a surface so that each chunk is only one surface
         for chunk in self.chunked_tiles:

@@ -28,13 +28,15 @@ class Game:
         # load all item images
         for item in item_data:
             # get the image path with the item properties
-            img_path = join("assets", "sprites", "items", str(item_data[item]["category"]), item + ".png")
+            img_path_inventory = join("assets", "sprites", "items_inventory", str(item_data[item]["category"]), item + ".png")
+            img_path_drop = join("assets", "sprites", "items_drop", str(item_data[item]["category"]), item + ".png")
             # load the image and convert it and scale it
-            img = pygame.transform.scale_by(pygame.image.load(img_path).convert_alpha(), 2)
+            img = pygame.transform.scale_by(pygame.image.load(img_path_inventory).convert_alpha(), 2)
             item_data[item]["image"] = img
             item_data[item]["image_outline"] = img_with_outline(image=img, color=rarity_color[item_data[item]["rarity"]], line_thickness=2)
             item_data[item]["image_alpha"] = img.copy()  # need copy instead of pointer
             item_data[item]["image_alpha"].set_alpha(0)
+            item_data[item]["image_drop"] = pygame.transform.scale_by(pygame.image.load(img_path_inventory).convert_alpha(), 0.5)
 
     def run(self):
         while True:

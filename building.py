@@ -9,3 +9,6 @@ class Building(Object):
         self.health = 100
         self.image = image
         self.rect = self.image.get_rect(topleft=pos)
+
+    def update(self, dt):
+        pass

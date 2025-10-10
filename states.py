@@ -1,14 +1,14 @@
 from constants import *
 import math, random
-from unit import Unit
 from utils.helper_functions import get_random_point_in_area_list
 from typing import Optional
+from harvestable import Harvestable
 
 
 class State:
     """Base state class"""
 
-    def __init__(self, unit: Unit):
+    def __init__(self, unit):
         self.unit = unit
         self.timer: float = 0
 
@@ -29,7 +29,7 @@ class State:
 class IdleState(State):
     def enter(self):
         super().enter()
-        self.duration = random.randint(60, 180)  # in ms
+        self.duration = random.randint(2, 8)  # in s
 
     def update(self, units, harvestables, items, dt):
         super().update(units, harvestables, items, dt)
@@ -42,17 +42,22 @@ class IdleState(State):
         if enemy_units:
             closest_enemy = min(enemy_units, key=lambda unit: self.unit.distance_to(unit.x, unit.y))
             distance_to_enemy = self.unit.distance_to(closest_enemy.rect.centerx, closest_enemy.rect.centery)
-        else:
-            # if no enemy unit exists (this will never happen)
-            closest_enemy = None
-            distance_to_enemy = None
 
-        # Check for threats
-        if distance_to_enemy < self.unit.detection_range:
-            if self.unit.fight_or_flight(closest_enemy):
-                return EngagingState(closest_enemy)
-            else:
-                return FleeingState(closest_enemy)
+            # Check for threats
+            if distance_to_enemy < self.unit.detection_range:
+                if self.unit.fight_or_flight(closest_enemy):
+                    return EngagingState(closest_enemy)
+                else:
+                    return FleeingState(closest_enemy)
+
+        # find the nearest item if there is any
+        if items:
+            closest_item = min(items, key=lambda item: self.unit.distance_to(item.rect.centerx, item.rect.centery))
+            distance_to_item = self.unit.distance_to(closest_item.rect.centerx, closest_item.rect.centery)
+
+            # check if there is a item in vicinity
+            if distance_to_item < self.unit.detection_range:
+                return CollectingState(self.unit, closest_item)
 
         # Random transitions
         if self.timer > self.duration:
@@ -62,7 +67,7 @@ class IdleState(State):
             elif choice < 0.8 and harvestables:
                 nearest = min(harvestables, key=lambda r: self.unit.distance_to(r.rect.centerx, r.rect.centery))
                 if self.unit.distance_to(nearest.rect.centerx, nearest.rect.centery) < 500:
-                    return HarvestingState(self.unit, nearest.rect.centerx, nearest.rect.centery)
+                    return HarvestingState(self.unit, nearest)
 
         return None
 
@@ -70,7 +75,7 @@ class IdleState(State):
 class RoamingState(State):
     def enter(self):
         super().enter()
-        self.duration = 10000  # in ms: fallback for when the unit cannot reach its target
+        self.duration = 10  # in s: fallback for when the unit cannot reach its target
 
         if self.unit.roaming_space is not None:
             self.target = get_random_point_in_area_list(self.unit.roaming_space)
@@ -91,19 +96,24 @@ class RoamingState(State):
         if enemy_units:
             closest_enemy = min(enemy_units, key=lambda unit: self.unit.distance_to(unit.x, unit.y))
             distance_to_enemy = self.unit.distance_to(closest_enemy.rect.centerx, closest_enemy.rect.centery)
-        else:
-            # if no enemy unit exists (this will never happen)
-            closest_enemy = None
-            distance_to_enemy = None
 
-        # Check for threats
-        if distance_to_enemy < self.unit.detection_range:
-            if self.unit.fight_or_flight(closest_enemy):
-                return EngagingState(closest_enemy)
-            else:
-                return FleeingState(closest_enemy)
+            # Check for threats
+            if distance_to_enemy < self.unit.detection_range:
+                if self.unit.fight_or_flight(closest_enemy):
+                    return EngagingState(self.unit, closest_enemy)
+                else:
+                    return FleeingState(self.unit, closest_enemy)
 
         reached = self.unit.move_to_point(self.target[0], self.target[1])
+
+        # find the nearest item if there is any
+        if items:
+            closest_item = min(items, key=lambda item: self.unit.distance_to(item.rect.centerx, item.rect.centery))
+            distance_to_item = self.unit.distance_to(closest_item.rect.centerx, closest_item.rect.centery)
+
+            # check if there is a item in vicinity
+            if distance_to_item < self.unit.detection_range:
+                return CollectingState(self.unit, closest_item)
 
         if reached or self.timer >= self.duration:
             return IdleState(self.unit)
@@ -112,10 +122,13 @@ class RoamingState(State):
 
 
 class HarvestingState(State):
-    def enter(self, target_x, target_y):
+    def __init__(self, unit, harvestable: Harvestable):
+        super().__init__(unit)
+        self.target = harvestable
+
+    def enter(self):
         super().enter()
-        self.duration = 20000
-        self.target = target_x, target_y
+        self.duration = 30
 
     def update(self, units, harvestables, items, dt):
         super().update(units, harvestables, items, dt)
@@ -127,10 +140,55 @@ class HarvestingState(State):
         if enemy_units:
             closest_enemy = min(enemy_units, key=lambda unit: self.unit.distance_to(unit.x, unit.y))
             distance_to_enemy = self.unit.distance_to(closest_enemy.rect.centerx, closest_enemy.rect.centery)
-        else:
-            # if no enemy unit exists (this will never happen)
-            closest_enemy = None
-            distance_to_enemy = None
 
-        reached = self.unit.move_to_point(self.target[0], self.target[1])
-        if reached()
+            # Check for threats
+            if distance_to_enemy < self.unit.detection_range:
+                if self.unit.fight_or_flight(closest_enemy):
+                    return EngagingState(closest_enemy)
+                else:
+                    return FleeingState(closest_enemy)
+
+        reached = self.unit.move_to_point(self.target.rect.centerx, self.target.rect.centery)
+        if reached:
+            self.unit.harvest(self.target)
+
+        if self.target.state == "depleted" or self.timer >= self.duration:
+            return IdleState(self.unit)
+
+        return None
+
+
+class CollectingState(State):
+    def __init__(self, unit, item):
+        super().__init__(unit)
+        self.target = item
+
+    def enter(self):
+        super().enter()
+        self.duration = 10
+
+    def update(self, units, harvestables, items, dt):
+        super().update(units, harvestables, items, dt)
+        if self.target not in items:
+            return IdleState(self.unit)
+
+        enemy_units = []
+        for unit in units:
+            # if the unit is from another faction
+            if unit.allegiance != self.unit.allegiance and not unit.dead:
+                enemy_units.append(unit)
+        if enemy_units:
+            closest_enemy = min(enemy_units, key=lambda unit: self.unit.distance_to(unit.x, unit.y))
+            distance_to_enemy = self.unit.distance_to(closest_enemy.rect.centerx, closest_enemy.rect.centery)
+
+            # Check for threats
+            if distance_to_enemy < self.unit.detection_range:
+                if self.unit.fight_or_flight(closest_enemy):
+                    return EngagingState(closest_enemy)
+                else:
+                    return FleeingState(closest_enemy)
+
+        reached = self.unit.move_to_point(self.target.rect.centerx, self.target.rect.centery, 1)
+        if reached:
+            self.unit.pick_up_item(self.target)
+            return IdleState(self.unit)
