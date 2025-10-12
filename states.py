@@ -81,8 +81,8 @@ class RoamingState(State):
             self.target = get_random_point_in_area_list(self.unit.roaming_space)
         else:
             roam_range = 200  # how many pixels in each direction the unit is allowed to roam
-            random_x = random.randrange(int(self.unit.rect.centerx - roam_range), int(self.unit.rect.centerx - roam_range))
-            random_y = random.randrange(int(self.unit.rect.centery - roam_range), int(self.unit.rect.centery - roam_range))
+            random_x = random.randrange(int(self.unit.rect.centerx - roam_range), int(self.unit.rect.centerx + roam_range))
+            random_y = random.randrange(int(self.unit.rect.centery - roam_range), int(self.unit.rect.centery + roam_range))
             self.target = random_x, random_y
 
     def update(self, units, harvestables, items, dt):
